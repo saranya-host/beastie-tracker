@@ -542,6 +542,9 @@
         let userId = null; // Will be set after authentication
         let logs = [], streak = 0, goal = 0;
 
+        // Fixed password for the tracker
+        const FIXED_PASSWORD = "beastie123";
+
         const quotes = [
             "Champions are built in silence.",
             "Focus. Grind. Repeat.",
@@ -980,21 +983,16 @@
             updateAll();
         }
 
-        // --- Password Lock ---
+        // --- Password Lock (Modified for fixed password) ---
         function checkPassword() {
             const inp = document.getElementById("authPass").value;
-            const saved = localStorage.getItem("beastie_pass");
-
+            
             if (!inp) {
-                alert("Please enter a password.");
+                alert("Please enter the password.");
                 return;
             }
 
-            if (!saved) { // No password set yet
-                localStorage.setItem("beastie_pass", inp);
-                alert("Password set successfully! Unlocking...");
-                unlockUI();
-            } else if (inp === saved) { // Correct password
+            if (inp === FIXED_PASSWORD) { // Check against the fixed password
                 unlockUI();
             } else { // Incorrect password
                 alert("❌ Incorrect password! Try again.");
@@ -1017,21 +1015,11 @@
             rotateQuote();
             updateClock(); // Ensure clock is visible immediately
 
-            const pass = localStorage.getItem("beastie_pass");
             const ov = document.getElementById("authOverlay");
+            ov.style.display = "flex"; // Always show the password overlay
 
-            if (pass) {
-                ov.style.display = "flex"; // Show overlay if password exists
-            } else {
-                ov.style.display = "flex"; // Show overlay to set password
-                document.getElementById("authTitle").textContent = "🔐 Set Your Beastie Password";
-                document.getElementById("authPopup button").textContent = "Set Password & Unlock"; // Change button text
-            }
-            
-            // If no password is set, or if the password was already correct (e.g., on refresh),
-            // we still need to wait for the user to interact with the password screen.
-            // The signInAnonymouslySupabase() call is now solely handled by unlockUI()
-            // which is triggered by the checkPassword() function.
+            // The password title and button text are now fixed in HTML
+            // and the checkPassword function handles the fixed password.
         };
     </script>
 </body>
