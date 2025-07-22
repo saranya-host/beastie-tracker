@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🌟 Legendary Beastie Tracker</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Global Reset & Core Styling */
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Montserrat', sans-serif;}
+        html,body {
+            min-height:100vh;
+            /* Reduced base font size for overall smaller appearance */
+            font-size: 14px; /* Default base font size */
+            /* New vibrant, colorful gradient background - less pink, more diverse */
+            background: linear-gradient(135deg, #6a11cb, #2575fc, #16a085, #f1c40f, #e67e22); 
+            background-size: 400% 400%; /* Larger for smoother animation */
+            animation: bgPulse 25s ease infinite; /* Slower, more majestic pulse */
+            color:#fff; /* White text for contrast */
+            display:flex;flex-direction:column;align-items:center;padding:15px; /* Reduced padding */
+            overflow-x: hidden; /* Prevent horizontal scroll from animations */
+        }
+        @keyframes bgPulse {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- LIQUID GLASS UI --- */
+        .card {
+            /* Base for liquid glass: subtle transparency, strong blur, soft shadows */
+            background: rgba(255, 255, 255, 0.08); /* Very subtle white tint */
+            border-radius: 24px; /* Slightly less rounded */
+            width: 100%; 
+            max-width: 500px; /* Reduced default max-width for medium screens/laptops */
+            margin-bottom: 25px; /* Reduced spacing */
+            padding: 28px; /* Reduced padding */
+            position: relative;
+            overflow: hidden; /* For pseudo-elements */
+
+            backdrop-filter: blur(35px) saturate(180%); /* Slightly reduced blur */
+            -webkit-backdrop-filter: blur(35px) saturate(180%);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.4); /* Slightly reduced shadow */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Softer, more defined border */
+            
+            /* Internal gradient for 'liquid' appearance - mimics light source */
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.03) 100%);
+
+            /* Subtle light reflection on top-left */
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+                border-radius: inherit;
+                pointer-events: none;
+                z-index: 1; /* Above content for subtle shine */
+                opacity: 0; /* Hidden by default */
+                transition: opacity 0.4s ease; /* Smoother transition */
+            }
+            &:hover::before {
+                opacity: 1; /* Show on hover for interactive feel */
+            }
+
+            transform:translateY(30px);
+            opacity:0;
+            animation:fadeInUp .9s ease forwards; /* Slower, smoother fade-in */
+        }
+        @keyframes fadeInUp{to{transform:translateY(0);opacity:1)}}
+
+        /* --- HEADINGS, BUTTONS, INPUTS --- */
+        h1{
+            font-family: 'Orbitron', sans-serif; /* Futuristic font */
+            font-size:3rem; /* Reduced font size */
+            margin-bottom:15px; /* Reduced margin */
+            color: #E0F7FA; /* Light cyan */
+            text-shadow: 0 0 20px rgba(100, 255, 255, 0.9), 0 0 40px rgba(100, 255, 255, 0.5); /* Slightly reduced glow */
+            letter-spacing: 3px; /* Reduced letter spacing */
+            text-align: center;
+            line-height: 1.2;
+        }
+        #greeting{font-size:1.1rem;margin-bottom:15px;opacity:.95; text-align: center; color: #BBDEFB;} /* Reduced font size */
+        .quote{font-size:1.2rem;font-style:italic;opacity:.85;margin-bottom:25px;color:#CFD8DC; text-align: center; line-height: 1.5;} /* Reduced font size */
+
+        input,select,textarea,button{
+            border:none;
+            transition:all .4s ease; /* Smoother, slightly slower transitions */
+            font-size: 1rem; /* Reduced font size */
+        }
+        input,select,textarea{
+            width:100%;padding:14px;margin-bottom:18px; /* Reduced padding, spacing */
+            background:rgba(255,255,255,0.15);color:#fff; /* Lighter, clearer glass for inputs */
+            border:1px solid rgba(255,255,255,0.3); /* Defined border */
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.15); /* Slightly reduced inner shadow */
+            border-radius: 12px; /* Keep inputs rectangular */
+        }
+        input::placeholder, textarea::placeholder {color: rgba(255,255,255,0.7);}
+        select option {background: #1a1a2e; color: #eee;} /* Darker background for select options */
+
+        input:focus,select:focus,textarea:focus{
+            background:rgba(255,255,255,0.25);
+            box-shadow:0 0 0 3px rgba(173, 216, 230, 0.7), 0 0 20px rgba(173, 216, 230, 0.9); /* Slightly reduced glow */
+            outline:none;
+            transform: scale(1.005); /* Very subtle grow effect on focus */
+        }
+        button{
+            /* Dynamic gradient for buttons */
+            background: linear-gradient(90deg, #A8C0FF, #392EDD); /* Blue-purple gradient */
+            color:#fff; /* White text */
+            padding:12px 24px; /* Reduced padding */
+            font-weight:700;
+            cursor:pointer;
+            border-radius:50px; /* Adjusted to 50px for a pill shape */
+            border:1px solid rgba(255,255,255,0.3); /* Subtle glassy border */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* Reduced shadow */
+            position: relative;
+            z-index: 0;
+            overflow: hidden;
+        }
+        button:hover{
+            background: linear-gradient(90deg, #8A2BE2, #6A5ACD); /* Darker purple on hover */
+            color:#fff;
+            box-shadow:0 0 25px rgba(138,43,226,0.8); /* Slightly reduced glow */
+            transform:scale(1.02); /* Subtle bump effect */
+        }
+        button:active{transform:scale(0.98);box-shadow:0 3px 10px rgba(0,0,0,0.4);}
+        .clear-btn{
+            background:linear-gradient(90deg, #FF6F61, #DE4B70); /* Red-pink gradient for clear */
+            color:#fff;
+        }
+        .clear-btn:hover{
+            background:linear-gradient(90deg, #DE4B70, #FF6F61); /* Reverse gradient on hover */
+            box-shadow:0 0 25px rgba(255,111,97,0.8);
+        }
+
+        /* --- Radio Group and Calendar --- */
+        .radio-group{display:flex;gap:15px;margin-bottom:20px;flex-wrap: wrap; justify-content: center;} /* Reduced gap, spacing */
+        .radio-group label {
+            background: rgba(255,255,255,0.12); /* Lighter base for radio */
+            padding: 10px 16px; /* Reduced padding */
+            border-radius: 12px; /* Slightly less rounded */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Reduced gap */
+            color: #E3F2FD; /* Light blue */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15); /* Reduced shadow */
+        }
+        .radio-group input[type="radio"] {display: none;} /* Hide actual radio button */
+        .radio-group input[type="radio"] + label::before { /* Custom radio button */
+            content: '';
+            display: inline-block;
+            width: 16px; height: 16px; /* Reduced size */
+            border-radius: 50%;
+            border: 2px solid #A7C5F9; /* Softer blue border */
+            background-color: transparent;
+            margin-right: 5px;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); /* Reduced inner shadow */
+        }
+        .radio-group input[type="radio"]:checked + label {
+            background: linear-gradient(45deg, #8A2BE2, #4F4ED5); /* Vibrant gradient on selection */
+            border-color: #BBDEFB; /* Brighter border */
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.7); /* Reduced glow */
+            color: #fff; /* White text when selected */
+        }
+        .radio-group input[type="radio"]:checked + label::before {
+            background-color: #fff; /* White fill on checked */
+            border-color: #fff;
+            box-shadow: 0 0 8px rgba(255,255,255,0.9); /* Reduced glow */
+        }
+        
+        .stats, .goals { margin-bottom:20px; color:#E0E0E0; font-size:1.1rem; line-height: 1.7;} /* Reduced font size */
+        .calendar{
+            display:flex;gap:12px; /* Reduced gap */
+            overflow-x:auto; /* Allow horizontal scroll for many days */
+            margin-bottom:25px;padding-bottom:8px; /* Reduced spacing */
+            padding: 6px; /* Reduced padding */
+            border-radius: 15px; /* Slightly less rounded */
+            background: rgba(255,255,255,0.08); /* Subtle background for calendar */
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.15); /* Reduced shadow */
+        }
+        .calendar div{
+            padding:10px 16px;border-radius:12px; /* Reduced padding, less rounded */
+            background:rgba(255,255,255,0.15);color:#D1C4E9; /* Light purple-blue */
+            cursor:pointer;transition:all .3s ease;
+            border:1px solid rgba(255,255,255,0.2);
+            min-width: 60px; /* Reduced size */
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* Reduced shadow */
+        }
+        .calendar div:hover{
+            background:rgba(255,255,255,0.25); 
+            transform: translateY(-5px) scale(1.05); /* Slightly reduced lift */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .calendar .today{
+            border:2px solid #8BC34A; /* Brighter green highlight for today */
+            box-shadow:0 0 12px rgba(139, 195, 74, 0.9), inset 0 0 6px rgba(139, 195, 74, 0.5); /* Slightly reduced glow */
+            background: linear-gradient(45deg, #8BC34A, #AED581); /* Gradient for today */
+            color: #333; /* Darker text for contrast on bright today */
+            font-weight: 700;
+        }
+
+        #clock{
+            position:fixed;top:20px;right:20px;padding:10px 16px;background:rgba(0,0,0,0.3);color:#fff;border-radius:20px; /* Reduced padding, less rounded */
+            font-family: 'Orbitron', sans-serif; font-size:1rem; letter-spacing: 1px; /* Reduced font size */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* Reduced shadow */
+            backdrop-filter: blur(10px); /* Reduced blur */
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.25);
+            animation: pulseClock 2s infinite alternate; /* Subtle pulse for clock */
+        }
+        @keyframes pulseClock {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(1.02); opacity: 0.9; }
+        }
+
+        /* Goal Progress Bar */
+        #goalProgress {height:12px;border-radius:6px;background:rgba(255,255,255,0.3);overflow:hidden;margin:12px 0; border: 1px solid rgba(255,255,255,0.4);} /* Reduced height, less rounded */
+        #goalFill{height:100%;width:0%;background:linear-gradient(90deg,#8e2de2,#4a00e0);transition:width .9s cubic-bezier(0.68, -0.55, 0.265, 1.55);} /* Smoother, springy transition */
+        #goalFill.complete {
+            background: linear-gradient(90deg, #A8ED8C, #6AC433); /* Bright green gradient on completion */
+            animation: goalComplete 1.5s ease-out forwards; /* More prominent animation on completion */
+            box-shadow: 0 0 25px rgba(106, 196, 51, 0.9); /* Reduced glow */
+        }
+        @keyframes goalComplete {
+            0% { transform: scaleX(0.9); opacity: 0.8; }
+            50% { transform: scaleX(1.05); opacity: 1; box-shadow: 0 0 30px #4a00e0; } /* Reduced glow */
+            100% { transform: scaleX(1); opacity: 1; }
+        }
+
+        /* Streak Display */
+        #streakDisplay {
+            display: flex;
+            gap: 8px; /* Reduced gap */
+            margin-top: 15px;
+            margin-bottom: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 10px; /* Reduced padding */
+            background: rgba(255,255,255,0.08); /* Lighter background for streak display */
+            border-radius: 15px; /* Slightly less rounded */
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.15); /* Reduced shadow */
+        }
+        .streak-dot {
+            width: 18px; /* Reduced size */
+            height: 18px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.3); /* Inactive - lighter */
+            border: 1px solid rgba(255,255,255,0.45);
+            transition: all 0.4s ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.15); /* Reduced inner shadow */
+        }
+        .streak-dot.active {
+            background: radial-gradient(circle at 30% 30%, #aaffea, #00cfff); /* Active glow */
+            border-color: #61DAFB; /* Brighter border for active */
+            box-shadow: 0 0 15px #61DAFB, 0 0 25px rgba(97, 218, 251, 0.7); /* Reduced glow */
+            animation: streakGlow 2s infinite alternate; /* Slower, more prominent pulse */
+        }
+        @keyframes streakGlow {
+            from { box-shadow: 0 0 15px #61DAFB; }
+            to { box-shadow: 0 0 20px #61DAFB, 0 0 35px rgba(97, 218, 251, 0.6); } /* Reduced glow */
+        }
+
+        /* --- AUTH POPUP --- */
+        #authOverlay {
+            position:fixed;inset:0;
+            backdrop-filter:blur(18px) saturate(180%); /* Slightly reduced blur */
+            background:rgba(0,0,0,0.8); /* Darker overlay */
+            display:flex;align-items:center;justify-content:center;
+            z-index:9999;animation:fadeIn .8s ease-in-out;
+        }
+        #authPopup {
+            background:rgba(255,255,255,0.2); /* Lighter popup background */
+            backdrop-filter:blur(25px) saturate(200%); /* Slightly reduced blur */
+            -webkit-backdrop-filter:blur(25px) saturate(200%);
+            padding:35px;border-radius:25px;max-width:450px;width:90%; /* Reduced padding, less rounded, reduced max-width */
+            box-shadow:0 20px 60px rgba(0,0,0,0.5); /* Reduced shadow */
+            text-align:center;color:#fff;
+            animation:slideUp .9s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Springy slide-up */
+            border:1px solid rgba(255,255,255,0.4);
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.15));
+        }
+        #authPopup::before { /* Inner light reflection for popup */
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, transparent 50%);
+            border-radius: inherit;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #authPopup h2 {font-family: 'Orbitron', sans-serif; margin-bottom: 20px; font-size: 2rem; color: #A7FFEB;} /* Reduced font size */
+        #authPopup input {
+            padding:14px;width:100%;margin-bottom:25px; /* Reduced padding, spacing */
+            background:rgba(255,255,255,0.4);color:#fff;
+            border:1px solid rgba(255,255,255,0.5);
+            border-radius:12px; /* Reduced roundedness */
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.15); /* Reduced inner shadow */
+        }
+        #authPopup input:focus{box-shadow:0 0 0 3px #A7FFEB,0 0 20px rgba(167, 255, 235, 0.9);} /* Reduced glow */
+        #authPopup button{
+            padding:14px 30px;background:linear-gradient(45deg, #00C4CC, #4D8EFF); color:#fff; /* Vibrant button gradient */
+            border:none;border-radius:50px;cursor:pointer;font-weight:700; /* Adjusted to 50px for a pill shape */
+            transition:all .5s ease; box-shadow:0 8px 20px rgba(0,196,204,0.6); /* Reduced shadow */
+            position: relative;
+            z-index: 0;
+            overflow: hidden;
+        }
+        #authPopup button:hover{
+            background:linear-gradient(45deg, #4D8EFF, #00C4CC); transform: translateY(-3px); box-shadow:0 12px 25px rgba(0,196,204,0.7); /* Reduced shadow */
+        }
+        #authPopup button::before { /* Border animation for auth button */
+            content: '';
+            position: absolute;
+            inset: -3px; /* Make border slightly larger */
+            border-radius: inherit;
+            background: linear-gradient(45deg, #ff005e, #00cfff, #00ff9d, #ffae00, #ff005e);
+            background-size: 500%;
+            animation: borderSpin 3.5s linear infinite; /* Faster spin for popup button */
+            z-index: -1;
+            filter: blur(4px); /* Soften the glowing border */
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        #authPopup button:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes slideUp{from{transform:translateY(100px);opacity:0}to{transform:translateY(0);opacity:1}}
+        @keyframes fadeOut{to{opacity:0; transform: translateY(-40px);}}
+
+        /* === GOOGLE TV STYLE BORDER ANIMATION === */
+        button {
+            position: relative;
+            z-index: 0;
+            overflow: hidden;
+            transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease; /* Smoother base transitions */
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            inset: -3px; /* Slightly larger border for glow effect */
+            border-radius: inherit;
+            padding: 4px; /* border thickness */
+            background: linear-gradient(45deg, #ff005e, #00cfff, #00ff9d, #ffae00, #ff005e);
+            background-size: 500%;
+            animation: borderSpin 7s linear infinite; /* Slower, more subtle spin for main buttons */
+            z-index: -1;
+            filter: blur(5px); /* Soften the glowing border */
+            opacity: 0;
+            transition: opacity 0.6s ease; /* Slower fade-in for border */
+        }
+
+        button:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes borderSpin {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- MEDIA QUERIES FOR RESPONSIVENESS --- */
+        /* Desktop / Larger Screens (min-width for default size) */
+        @media (min-width: 1024px) {
+            html, body { font-size: 15px; /* Slightly larger base font for desktop */
+            padding: 20px; }
+            .card {
+                max-width: 580px; /* Adjusted max-width for large desktops */
+                padding: 35px;
+                border-radius: 28px;
+            }
+            h1 { font-size: 3.5rem; letter-spacing: 4px; }
+            #greeting { font-size: 1.2rem; }
+            .quote { font-size: 1.3rem; }
+            input, select, textarea, button { font-size: 1.15rem; padding: 16px; border-radius: 50px; } /* Adjusted button border-radius */
+            input, select, textarea { border-radius: 15px; } /* Keep inputs rectangular */
+            .radio-group label { padding: 12px 20px; border-radius: 15px; }
+            .radio-group input[type="radio"] + label::before { width: 18px; height: 18px; }
+            .calendar div { padding: 14px 20px; border-radius: 15px; min-width: 70px; font-size: 1rem; }
+            #clock { font-size: 1.2rem; top: 25px; right: 25px; padding: 12px 20px; border-radius: 25px; }
+            #goalProgress { height: 15px; border-radius: 8px; }
+            .streak-dot { width: 20px; height: 20px; }
+            #authPopup { padding: 40px; border-radius: 30px; max-width: 500px; }
+            #authPopup h2 { font-size: 2.2rem; }
+            #authPopup input { padding: 16px; border-radius: 15px; }
+            #authPopup button { padding: 16px 35px; border-radius: 50px; } /* Adjusted button border-radius */
+        }
+
+        /* Tablets and larger phones (default for medium screens) */
+        @media (max-width: 1023px) and (min-width: 601px) {
+            html, body { padding: 15px; font-size: 14px; }
+            h1 { font-size: 3rem; margin-bottom: 15px; letter-spacing: 3px;}
+            #greeting { font-size: 1.1rem; margin-bottom: 18px; }
+            .quote { font-size: 1.2rem; margin-bottom: 25px;}
+            #clock { font-size: 1.1rem; right: 20px; top: 20px; padding: 10px 16px; border-radius: 20px; }
+            .card { padding: 28px; margin-bottom: 25px; border-radius: 24px; max-width: 500px; }
+            input, select, textarea, button { padding: 14px; margin-bottom: 18px; font-size: 1rem; border-radius: 50px; } /* Adjusted button border-radius */
+            input, select, textarea { border-radius: 12px; } /* Keep inputs rectangular */
+            .radio-group { gap: 15px; margin-bottom: 20px; }
+            .radio-group label { padding: 10px 16px; border-radius: 12px; }
+            .radio-group input[type="radio"] + label::before { width: 16px; height: 16px; }
+            .calendar { gap: 12px; padding-bottom: 8px; }
+            .calendar div { padding: 10px 16px; font-size: 0.9rem; min-width: 60px; border-radius: 12px; }
+            #streakDisplay { gap: 8px; padding: 10px; border-radius: 15px; }
+            .streak-dot { width: 18px; height: 18px; }
+            #authPopup { padding: 35px; border-radius: 25px; max-width: 450px; }
+            #authPopup h2 { font-size: 2.0rem; } /* Adjusted font size */
+            #authPopup input { padding: 14px; border-radius: 12px; }
+            #authPopup button { padding: 14px 30px; border-radius: 50px; } /* Adjusted button border-radius */
+        }
+
+        /* Smaller phones (max-width for mobile optimization) */
+        @media (max-width: 600px) {
+            html, body { padding: 10px; font-size: 13px; }
+            h1 { font-size: 2.2rem; margin-bottom: 10px; letter-spacing: 2px;}
+            #greeting { font-size: 0.9rem; margin-bottom: 12px; }
+            .quote { font-size: 1rem; margin-bottom: 18px;}
+            #clock { font-size: 0.85rem; right: 10px; top: 10px; padding: 7px 12px; border-radius: 18px; }
+            .card { padding: 18px; /* Further reduced padding */ margin-bottom: 18px; border-radius: 16px; } /* Adjusted border-radius */
+            input, select, textarea, button { padding: 10px; /* Further reduced padding */ margin-bottom: 12px; font-size: 0.9rem; border-radius: 50px; } /* Adjusted button border-radius */
+            input, select, textarea { border-radius: 10px; } /* Keep inputs rectangular */
+            .radio-group { flex-direction: column; gap: 8px; align-items: stretch;} /* Stack radios vertically */
+            .radio-group label { padding: 7px 10px; border-radius: 10px; justify-content: center; }
+            .radio-group input[type="radio"] + label::before { width: 14px; height: 14px; }
+            .button-row { flex-direction: column; gap: 8px; } /* Stack buttons vertically */
+            .calendar { gap: 6px; padding-bottom: 4px; } /* Further reduced gap and padding */
+            .calendar div { padding: 8px 12px; font-size: 0.8rem; min-width: 45px; border-radius: 8px; } /* Further reduced size */
+            #streakDisplay { gap: 4px; padding: 7px; border-radius: 10px; } /* Further reduced size */
+            .streak-dot { width: 15px; height: 15px; } /* Further reduced size */
+            #authPopup { padding: 22px; /* Further reduced padding */ border-radius: 18px; max-width: 320px; } /* Adjusted max-width */
+            #authPopup h2 { font-size: 1.5rem; margin-bottom: 12px;} /* Reduced font size */
+            #authPopup input { padding: 10px; margin-bottom: 15px; } /* Reduced padding */
+            #authPopup button { padding: 10px 20px; border-radius: 50px; } /* Adjusted button border-radius */
+        }
+        @media (max-width: 400px) { /* Very small phones */
+            html, body { padding: 8px; font-size: 12px; }
+            h1 { font-size: 1.8rem; letter-spacing: 1px;}
+            #greeting, .quote { font-size: 0.8rem; }
+            #clock { font-size: 0.75rem; right: 8px; top: 8px; padding: 5px 8px; border-radius: 10px; }
+            .card { padding: 15px; margin-bottom: 15px; border-radius: 12px; }
+            input, select, textarea, button { padding: 8px; margin-bottom: 8px; font-size: 0.85rem; border-radius: 50px; } /* Adjusted button border-radius */
+            input, select, textarea { border-radius: 8px; } /* Keep inputs rectangular */
+            .radio-group { gap: 6px; }
+            .radio-group label { padding: 6px 8px; border-radius: 8px; }
+            .radio-group input[type="radio"] + label::before { width: 10px; height: 10px; }
+            .button-row button { padding: 8px 12px; }
+            .calendar div { padding: 8px 12px; font-size: 0.75rem; min-width: 45px; border-radius: 8px; }
+            #streakDisplay { gap: 3px; padding: 6px; border-radius: 10px; }
+            .streak-dot { width: 14px; height: 14px; }
+            #authPopup { padding: 18px; border-radius: 18px; }
+            #authPopup h2 { font-size: 1.4rem; }
+            #authPopup input { padding: 10px; margin-bottom: 15px; }
+            #authPopup button { padding: 10px 20px; border-radius: 50px; } /* Adjusted button border-radius */
+        }
+    </style>
+</head>
+<body>
+    <div id="authOverlay" style="display:none;">
+        <div id="authPopup">
+            <h2 id="authTitle">🔐 Verify it's you</h2><br>
+            <input id="authPass" type="password" placeholder="Enter Password" />
+            <button onclick="checkPassword()">Unlock the Beast</button>
+            <p id="userIdDisplay" style="margin-top: 15px; font-size: 0.85rem; opacity: 0.7; color: #B2EBF2;"></p>
+        </div>
+    </div>
+
+    <h1>🌟 Legendary Beastie Tracker</h1>
+    <div id="greeting"></div>
+    <div class="quote" id="quote">“Master your mind, master your future.”</div>
+    <div id="clock"></div>
+    <button onclick="toggleDarkMode()">🌓 Toggle Dark Mode</button><br>
+
+    <div class="card">
+        <label>Subject</label>
+        <select id="subject"><option value="">Select</option><option>Tamil</option><option>English</option><option>Maths</option><option>Science</option><option>Social Science</option><option>Coding</option><option>General Knowledge</option></select>
+        <label>Time Spent (minutes)</label>
+        <input id="time" type="number" placeholder="e.g. 45" min="0">
+        <label>Notes</label>
+        <textarea id="notes" rows="2" placeholder="e.g. Chapter 2 revision; challenging topic."></textarea>
+        <div class="radio-group">
+            <input name="sessionTime" type="radio" id="morningRadio" value="Morning">
+            <label for="morningRadio">🌅 Morning</label>
+            <input name="sessionTime" type="radio" id="eveningRadio" value="Evening">
+            <label for="eveningRadio">🌃 Evening</label>
+            <input name="sessionTime" type="radio" id="afternoonRadio" value="Afternoon">
+            <label for="afternoonRadio">☀️ Afternoon</label>
+        </div>
+        <div class="radio-group">
+            <input name="studyType" type="radio" id="newRadio" value="New">
+            <label for="newRadio">✨ New Study</label>
+            <input name="studyType" type="radio" id="revisionRadio" value="Revision">
+            <label for="revisionRadio">🔄 Revision</label>
+            <input name="studyType" type="radio" id="practiceRadio" value="Practice">
+            <label for="practiceRadio">🧪 Practice</label>
+        </div>
+        <select id="mood"><option value="">Your Mood...</option><option>😌 Calm</option><option>😤 Focused</option><option>😖 Tired</option><option>🤯 Burnout</option><option>💡 Inspired</option><option>⚡ Energized</option></select>
+        <div id="moodPreview" style="font-size:1.2rem;margin-bottom:8px; text-align: center; color: #aaffea;"></div>
+        <div class="button-row">
+            <button onclick="logStudy()">✅ Log Epic Study</button>
+            <button class="clear-btn" onclick="clearHistory()">🗑️ Clear All Logs</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="stats" id="todayStats"></div>
+        <div id="streakDisplay"></div>
+        <div class="goals" id="goalContainer">
+            Daily Goal: <input id="goalInput" type="number" placeholder="Target mins today" min="0">
+            <button onclick="setGoal()">Set Goal</button>
+            <div id="goalProgress"><div id="goalFill"></div></div>
+        </div>
+        <div class="calendar" id="calendar"></div>
+        <button onclick="exportLogs()">Export All Logs</button>
+    </div>
+
+    <script type="module">
+        // Supabase Imports
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        // !!! IMPORTANT: REPLACE THESE WITH YOUR ACTUAL SUPABASE PROJECT URL AND ANON KEY !!!
+        const SUPABASE_URL = 'https://fpqsachirakshbqcgxrt.supabase.co'; // e.g., 'https://abcdefg1234.supabase.co'
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcXNhY2hpcmFrc2hicWNneHJ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxOTcxODcsImV4cCI6MjA2ODc3MzE4N30.KL0XC3afVLPal_tk9eOjnoutp9lP5kL_ecm7oIJDjVA'; // e.g., 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let userId = null; // Will be set after authentication
+        let logs = [], streak = 0, goal = 0;
+
+        const quotes = [
+            "Champions are built in silence.",
+            "Focus. Grind. Repeat.",
+            "You are what you do, not what you say you'll do.",
+            "Make yourself proud.",
+            "The only way to do great work is to love what you do.",
+            "Success is the sum of small efforts, repeated day in and day out.",
+            "Don't wish for it, work for it."
+        ];
+
+        // --- Core UI & Dynamic Content ---
+        function rotateQuote() {
+            document.getElementById("quote").textContent = "“" + quotes[Math.floor(Math.random() * quotes.length)] + "”";
+        }
+        setInterval(rotateQuote, 60000); // Change quote every minute
+        rotateQuote(); // Initial quote
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById("clock").textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        setInterval(updateClock, 1000); // Update every second
+        updateClock(); // Initial clock display
+
+        function greetUser() {
+            const hr = new Date().getHours(), g = document.getElementById("greeting");
+            if (hr < 12) g.textContent = "🌅 Good morning, Beastie!";
+            else if (hr < 18) g.textContent = "☀️ Good afternoon!";
+            else g.textContent = "🌃 Good evening, Beastie!";
+        }
+        greetUser();
+
+        // Mood Preview
+        document.getElementById("mood").addEventListener("input", e => {
+            document.getElementById("moodPreview").textContent = "Mood: " + e.target.value;
+        });
+
+        // --- Supabase Authentication ---
+        async function signInAnonymouslySupabase() {
+            try {
+                const { data, error } = await supabase.auth.signInAnonymously();
+                if (error) throw error;
+                userId = data.user.id;
+                document.getElementById('userIdDisplay').textContent = `User ID: ${userId.substring(0, 8)}...`; // Display truncated ID
+                console.log("Supabase authenticated with user ID:", userId);
+                await loadInitialData(); // Load data once authenticated
+            } catch (error) {
+                console.error("Error signing in anonymously with Supabase:", error.message);
+                alert("Error signing in. Please check console for details.");
+                // Fallback to local storage if Supabase auth fails
+                userId = crypto.randomUUID(); // Generate a random ID for local-only operation
+                document.getElementById('userIdDisplay').textContent = `User ID (Local): ${userId.substring(0, 8)}...`;
+                console.warn("Could not authenticate with Supabase, using local-only user ID.");
+                loadInitialDataFromLocalStorage(); // Load from local storage
+            }
+        }
+
+        // --- Data Logging & Persistence (Supabase) ---
+        async function logStudy() {
+            if (!userId) {
+                alert("❗ App is not ready. Please wait for authentication.");
+                return;
+            }
+
+            const s = document.getElementById("subject").value;
+            const t = parseInt(document.getElementById("time").value);
+            const note = document.getElementById("notes").value.trim();
+            const session = document.querySelector('input[name="sessionTime"]:checked')?.value;
+            const type = document.querySelector('input[name="studyType"]:checked')?.value;
+            const mood = document.getElementById("mood").value;
+
+            if (!s || isNaN(t) || t <= 0 || !session || !type) {
+                alert("❗ Please ensure Subject, Time, Session, and Study Type are all filled in correctly.");
+                return;
+            }
+
+            const d = new Date().toLocaleDateString();
+            const timestamp = Date.now(); // Add a timestamp for consistent ordering
+
+            try {
+                const { data, error } = await supabase
+                    .from('study_logs') // Your table name
+                    .insert([
+                        { user_id: userId, date: d, subj: s, time: t, session, kind, note, mood, timestamp }
+                    ]);
+                if (error) throw error;
+                console.log("Study log added to Supabase:", data);
+            } catch (e) {
+                console.error("Error adding document to Supabase: ", e.message);
+                alert("Error logging study. Please try again.");
+            }
+            
+            // Clear inputs after logging
+            document.getElementById("subject").selectedIndex = 0;
+            document.getElementById("time").value = "";
+            document.getElementById("notes").value = "";
+            document.querySelectorAll('input[name="sessionTime"]').forEach(radio => radio.checked = false);
+            document.querySelectorAll('input[name="studyType"]').forEach(radio => radio.checked = false);
+            document.getElementById("mood").selectedIndex = 0;
+            document.getElementById("moodPreview").textContent = "";
+        }
+
+        async function clearHistory() {
+            if (!userId) {
+                alert("❗ App is not ready. Please wait for authentication.");
+                return;
+            }
+
+            if (confirm("🚨 Are you sure you want to clear ALL study logs? This cannot be undone!")) {
+                try {
+                    const { error } = await supabase
+                        .from('study_logs')
+                        .delete()
+                        .eq('user_id', userId); // Ensure only current user's logs are deleted
+                    if (error) throw error;
+                    console.log("All study logs cleared from Supabase.");
+                } catch (e) {
+                    console.error("Error clearing documents from Supabase: ", e.message);
+                    alert("Error clearing logs. Please try again.");
+                }
+            }
+        }
+
+        // --- Data Analysis & Display ---
+        function updateStats() {
+            const today = new Date().toLocaleDateString();
+            const todayLogs = logs.filter(l => l.date === today);
+            const total = todayLogs.reduce((a, b) => a + b.time, 0);
+            const bySub = {};
+            todayLogs.forEach(l => bySub[l.subj] = (bySub[l.subj] || 0) + l.time);
+
+            let txt = `⚡ Today's Beast Mode: **${total} minutes**`;
+            for (let s in bySub) txt += ` • ${s}: ${bySub[s]} min`;
+            
+            document.getElementById("todayStats").innerHTML = txt; // Use innerHTML for bold
+        }
+
+        function updateStreak() {
+            // Ensure logs are sorted by date for accurate streak calculation
+            const sortedLogs = [...logs].sort((a, b) => new Date(a.date) - new Date(b.date));
+            const dates = [...new Set(sortedLogs.map(l => l.date))]; // Unique dates from sorted logs
+
+            let currentStreak = 0;
+            let lastDate = new Date(); // Start from "today"
+            lastDate.setHours(0,0,0,0); // Normalize to start of day
+
+            // Check if today has logs. If not, and yesterday has logs, start streak check from yesterday.
+            const todayHasLogs = dates.some(d => new Date(d).setHours(0,0,0,0) === lastDate.getTime());
+            if (!todayHasLogs && dates.length > 0) {
+                const latestLogDate = new Date(dates[dates.length - 1]);
+                latestLogDate.setHours(0,0,0,0);
+                const yesterday = new Date(lastDate);
+                yesterday.setDate(lastDate.getDate() - 1);
+                if (latestLogDate.getTime() === yesterday.getTime()) {
+                    lastDate.setDate(lastDate.getDate() - 1); // Adjust lastDate to yesterday to start streak
+                } else if (latestLogDate.getTime() < yesterday.getTime()) {
+                    // If the latest log is older than yesterday, streak is 0
+                    currentStreak = 0;
+                    streak = currentStreak;
+                    drawStreakVisual();
+                    return;
+                }
+            }
+
+            for (let i = dates.length - 1; i >= 0; i--) {
+                const logDate = new Date(dates[i]);
+                logDate.setHours(0,0,0,0); // Normalize log date
+
+                if (logDate.getTime() === lastDate.getTime()) {
+                    currentStreak++;
+                    lastDate.setDate(lastDate.getDate() - 1); // Move to previous day
+                } else if (logDate.getTime() < lastDate.getTime()) {
+                    // If there's a gap, break the streak
+                    break;
+                }
+            }
+            streak = currentStreak;
+            drawStreakVisual();
+        }
+
+
+        function drawStreakVisual() {
+            const streakDisplay = document.getElementById("streakDisplay");
+            streakDisplay.innerHTML = ''; // Clear previous dots
+            const maxDots = 7; // Display up to 7 streak days visually
+            const effectiveStreak = Math.min(streak, maxDots);
+
+            if (streak > 0) {
+                const prefix = document.createElement('span');
+                prefix.textContent = `🔥 Streak: ${streak} days `;
+                prefix.style.marginRight = '5px';
+                prefix.style.fontWeight = '600';
+                prefix.style.color = '#fff'; /* Ensure streak text is white */
+                streakDisplay.appendChild(prefix);
+
+                for (let i = 0; i < maxDots; i++) {
+                    const dot = document.createElement('div');
+                    dot.classList.add('streak-dot');
+                    if (i < effectiveStreak) {
+                        dot.classList.add('active');
+                    }
+                    streakDisplay.appendChild(dot);
+                }
+            } else {
+                    streakDisplay.innerHTML = `<span style="opacity:0.8; font-style:italic; color: #E0E0E0;">No active streak. Log some study!</span>`;
+            }
+        }
+
+        async function setGoal() {
+            if (!userId) {
+                alert("❗ App is not ready. Please wait for authentication.");
+                return;
+            }
+            goal = parseInt(document.getElementById("goalInput").value) || 0;
+
+            try {
+                // Check if a goal already exists for this user
+                const { data: existingGoal, error: fetchError } = await supabase
+                    .from('settings') // Assuming you create a 'settings' table for goals
+                    .select('id')
+                    .eq('user_id', userId)
+                    .eq('type', 'dailyGoal')
+                    .single(); // Use single to get one record
+
+                if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 means no rows found
+                    throw fetchError;
+                }
+
+                if (existingGoal) {
+                    // Update existing goal
+                    const { error: updateError } = await supabase
+                        .from('settings')
+                        .update({ value: goal, updated_at: new Date().toISOString() }) // Add updated_at if you have it
+                        .eq('id', existingGoal.id);
+                    if (updateError) throw updateError;
+                    console.log("Daily goal updated in Supabase.");
+                } else {
+                    // Insert new goal
+                    const { error: insertError } = await supabase
+                        .from('settings')
+                        .insert([{ user_id: userId, type: "dailyGoal", value: goal, created_at: new Date().toISOString() }]);
+                    if (insertError) throw insertError;
+                    console.log("Daily goal set in Supabase.");
+                }
+            } catch (e) {
+                console.error("Error setting goal in Supabase: ", e.message);
+                alert("Error setting goal. Please try again.");
+            }
+            updateGoal(); // Update UI immediately
+        }
+
+        function updateGoal() {
+            const today = new Date().toLocaleDateString();
+            const tot = logs.filter(l => l.date === today).reduce((a, b) => a + b.time, 0);
+            const goalFill = document.getElementById("goalFill");
+            
+            let percentage = goal > 0 ? Math.min(100, (tot / goal) * 100) : 0;
+            goalFill.style.width = percentage + "%";
+
+            if (percentage >= 100 && goal > 0) {
+                goalFill.classList.add('complete');
+            } else {
+                goalFill.classList.remove('complete');
+            }
+            // Display goal progress visually
+            const goalContainer = document.getElementById("goalContainer");
+            let goalStatus = document.getElementById("goalStatus");
+            if (!goalStatus) {
+                goalStatus = document.createElement('p');
+                goalStatus.id = "goalStatus";
+                goalStatus.style.marginTop = '8px';
+                goalStatus.style.textAlign = 'center';
+                goalStatus.style.color = '#B2EBF2'; /* Light cyan for status */
+                goalContainer.appendChild(goalStatus);
+            }
+            if (goal > 0) {
+                goalStatus.textContent = `${tot} / ${goal} minutes - ${percentage.toFixed(0)}%`;
+                if (percentage >= 100) {
+                    goalStatus.innerHTML += ' 🎉 *Goal Achieved!*';
+                }
+            } else {
+                goalStatus.textContent = 'Set a daily goal above!';
+            }
+        }
+
+
+        function drawCalendar() {
+            const cal = document.getElementById("calendar");
+            cal.innerHTML = ""; // Clear previous calendar
+            for (let i = 6; i >= 0; i--) { // Last 7 days
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const div = document.createElement("div");
+                div.textContent = d.getDate();
+                if (d.toLocaleDateString() === new Date().toLocaleDateString()) {
+                    div.classList.add("today");
+                }
+                div.onclick = () => {
+                    const dateString = d.toLocaleDateString();
+                    const list = logs.filter(l => l.date === dateString)
+                        .map(l => `Subject: ${l.subj}\nTime: ${l.time}min\nSession: ${l.session}\nType: ${l.kind}${l.mood ? `\nMood: ${l.mood}` : ""}${l.note ? `\nNotes: ${l.note}` : ""}`)
+                        .join("\n\n") || "No logs for this day.";
+                    alert(`Logs for ${dateString}:\n\n${list}`);
+                };
+                cal.appendChild(div);
+            }
+        }
+
+        async function exportLogs() {
+            if (!userId) {
+                alert("❗ App is not ready. Please wait for authentication.");
+                return;
+            }
+            try {
+                const { data, error } = await supabase
+                    .from('study_logs')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .order('timestamp', { ascending: false }); // Order by timestamp for consistent export
+                if (error) throw error;
+
+                const allLogs = data;
+
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(new Blob([JSON.stringify(allLogs, null, 2)], { type: "application/json" })); // Pretty print JSON
+                a.download = "beastie_logs.json";
+                a.click();
+                alert("Logs exported as beastie_logs.json!");
+            } catch (e) {
+                console.error("Error exporting logs from Supabase: ", e.message);
+                alert("Error exporting logs. Please try again.");
+            }
+        }
+
+        function updateAll() {
+            updateStreak(); // Update streak and its visual
+            updateStats();
+            updateGoal();
+            drawCalendar();
+        }
+
+        // --- Initial Load & Data Fetch (Supabase & LocalStorage Fallback) ---
+        async function loadInitialData() {
+            if (!userId) {
+                console.warn("User ID not available, cannot load data from Supabase.");
+                loadInitialDataFromLocalStorage(); // Fallback to localStorage
+                return;
+            }
+
+            // Listen for real-time updates to study logs
+            supabase
+                .from('study_logs')
+                .on('INSERT', payload => {
+                    // Add new log to the beginning of the array and sort
+                    logs.unshift(payload.new);
+                    logs.sort((a, b) => b.timestamp - a.timestamp);
+                    updateAll();
+                    console.log('Realtime INSERT:', payload.new);
+                })
+                .on('UPDATE', payload => {
+                    // Find and update the log
+                    const index = logs.findIndex(log => log.id === payload.new.id);
+                    if (index !== -1) {
+                        logs[index] = payload.new;
+                        logs.sort((a, b) => b.timestamp - a.timestamp);
+                        updateAll();
+                        console.log('Realtime UPDATE:', payload.new);
+                    }
+                })
+                .on('DELETE', payload => {
+                    // Remove deleted log
+                    logs = logs.filter(log => log.id !== payload.old.id);
+                    updateAll();
+                    console.log('Realtime DELETE:', payload.old);
+                })
+                .subscribe();
+
+            // Initial fetch of all logs
+            try {
+                const { data, error } = await supabase
+                    .from('study_logs')
+                    .select('*')
+                    .eq('user_id', userId) // Fetch only logs for the current user
+                    .order('timestamp', { ascending: false }); // Sort by timestamp
+                if (error) throw error;
+                logs = data;
+                updateAll();
+                console.log("Initial logs loaded from Supabase.");
+            } catch (e) {
+                console.error("Error loading initial logs from Supabase:", e.message);
+                alert("Error loading logs. Falling back to local storage.");
+                loadInitialDataFromLocalStorage();
+            }
+
+            // Load Goal (assuming a 'settings' table with 'type' and 'value' columns)
+            try {
+                const { data, error } = await supabase
+                    .from('settings') // Assuming a 'settings' table
+                    .select('value')
+                    .eq('user_id', userId)
+                    .eq('type', 'dailyGoal')
+                    .single(); // Use single to get one record
+                if (error && error.code !== 'PGRST116') { // PGRST116 means no rows found
+                    throw error;
+                }
+                goal = data ? data.value : 0;
+                document.getElementById('goalInput').value = goal;
+                updateGoal();
+                console.log("Goal loaded from Supabase:", goal);
+            } catch (e) {
+                console.error("Error loading goal from Supabase:", e.message);
+                goal = 0;
+                document.getElementById('goalInput').value = 0;
+                updateGoal();
+            }
+        }
+
+
+        // Fallback for when Supabase is not configured or fails
+        function loadInitialDataFromLocalStorage() {
+            const storedLogs = localStorage.getItem('beastieLogs');
+            if (storedLogs) {
+                logs = JSON.parse(storedLogs);
+                // Ensure logs are sorted if coming from localStorage without timestamp
+                logs.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else {
+                logs = [];
+            }
+            const storedGoal = localStorage.getItem('beastieGoal');
+            if (storedGoal) {
+                goal = parseInt(storedGoal);
+                document.getElementById('goalInput').value = goal;
+            } else {
+                goal = 0;
+            }
+            updateAll();
+        }
+
+        // --- Password Lock ---
+        function checkPassword() {
+            const inp = document.getElementById("authPass").value;
+            const saved = localStorage.getItem("beastie_pass");
+
+            if (!inp) {
+                alert("Please enter a password.");
+                return;
+            }
+
+            if (!saved) { // No password set yet
+                localStorage.setItem("beastie_pass", inp);
+                alert("Password set successfully! Unlocking...");
+                unlockUI();
+            } else if (inp === saved) { // Correct password
+                unlockUI();
+            } else { // Incorrect password
+                alert("❌ Incorrect password! Try again.");
+                document.getElementById("authPass").value = ""; // Clear input
+            }
+        }
+
+        function unlockUI() {
+            const o = document.getElementById("authOverlay");
+            o.style.animation = "fadeOut .4s ease forwards";
+            setTimeout(() => o.remove(), 400); // Remove overlay after animation
+        }
+
+        // --- On Page Load ---
+        window.onload = async () => {
+            greetUser();
+            rotateQuote();
+            updateClock(); // Ensure clock is visible immediately
+
+            const pass = localStorage.getItem("beastie_pass");
+            const ov = document.getElementById("authOverlay");
+
+            if (pass) {
+                ov.style.display = "flex"; // Show overlay if password exists
+            } else {
+                ov.style.display = "flex"; // Show overlay to set password
+                document.getElementById("authTitle").textContent = "🔐 Set Your Beastie Password";
+                document.getElementById("authPopup button").textContent = "Set Password & Unlock"; // Change button text
+            }
+            
+            // Initiate Supabase anonymous sign-in after the password check is handled
+            // This ensures auth is ready before attempting to load data
+            const unlockButton = document.getElementById('authPopup').querySelector('button');
+            unlockButton.addEventListener('click', async () => {
+                // A small delay to allow unlockUI animation to start
+                setTimeout(async () => {
+                    await signInAnonymouslySupabase(); // Start Supabase auth
+                }, 450); 
+            }, { once: true }); // Ensure it only runs once
+
+            // If no password is set or if password is correct and overlay is fading out,
+            // immediately attempt Supabase sign-in.
+            if (!pass || (pass && ov.style.animationName === 'fadeOut')) {
+                 await signInAnonymouslySupabase();
+            }
+        };
+    </script>
+</body>
+</html>
