@@ -585,7 +585,7 @@
                 const { data, error } = await supabase.auth.signInAnonymously();
                 if (error) throw error;
                 userId = data.user.id;
-                document.getElementById('userIdDisplay').textContent = `User ID: ${userId.substring(0, 8)}...`; // Display truncated ID
+                document.getElementById('userIdDisplay').textContent = `User ID: ${userId}`; // Display full ID
                 console.log("Supabase authenticated with user ID:", userId);
                 await loadInitialData(); // Load data once authenticated
             } catch (error) {
@@ -593,7 +593,7 @@
                 alert("Error signing in. Please check console for details.");
                 // Fallback to local storage if Supabase auth fails
                 userId = crypto.randomUUID(); // Generate a random ID for local-only operation
-                document.getElementById('userIdDisplay').textContent = `User ID (Local): ${userId.substring(0, 8)}...`;
+                document.getElementById('userIdDisplay').textContent = `User ID (Local): ${userId}`;
                 console.warn("Could not authenticate with Supabase, using local-only user ID.");
                 loadInitialDataFromLocalStorage(); // Load from local storage
             }
@@ -1005,11 +1005,14 @@
         function unlockUI() {
             const o = document.getElementById("authOverlay");
             o.style.animation = "fadeOut .4s ease forwards";
-            setTimeout(() => o.remove(), 400); // Remove overlay after animation
+            setTimeout(async () => {
+                o.remove(); // Remove overlay after animation
+                await signInAnonymouslySupabase(); // Call Supabase sign-in AFTER overlay is gone
+            }, 400); 
         }
 
         // --- On Page Load ---
-        window.onload = async () => {
+        window.onload = () => {
             greetUser();
             rotateQuote();
             updateClock(); // Ensure clock is visible immediately
@@ -1025,21 +1028,10 @@
                 document.getElementById("authPopup button").textContent = "Set Password & Unlock"; // Change button text
             }
             
-            // Initiate Supabase anonymous sign-in after the password check is handled
-            // This ensures auth is ready before attempting to load data
-            const unlockButton = document.getElementById('authPopup').querySelector('button');
-            unlockButton.addEventListener('click', async () => {
-                // A small delay to allow unlockUI animation to start
-                setTimeout(async () => {
-                    await signInAnonymouslySupabase(); // Start Supabase auth
-                }, 450); 
-            }, { once: true }); // Ensure it only runs once
-
-            // If no password is set or if password is correct and overlay is fading out,
-            // immediately attempt Supabase sign-in.
-            if (!pass || (pass && ov.style.animationName === 'fadeOut')) {
-                 await signInAnonymouslySupabase();
-            }
+            // If no password is set, or if the password was already correct (e.g., on refresh),
+            // we still need to wait for the user to interact with the password screen.
+            // The signInAnonymouslySupabase() call is now solely handled by unlockUI()
+            // which is triggered by the checkPassword() function.
         };
     </script>
 </body>
