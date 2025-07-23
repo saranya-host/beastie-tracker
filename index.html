@@ -2,219 +2,309 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>🌟 Legendary Beastie Tracker</title>
+    <title>🌟 Legendary Beastie Tracker 3.0</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN for data visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* Global Reset & Core Styling */
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Montserrat', sans-serif;}
-        html,body {
-            min-height:100vh;
-            /* Reduced base font size for overall smaller appearance */
-            font-size: 14px; /* Default base font size */
-            /* New vibrant, colorful gradient background - less pink, more diverse */
-            background: linear-gradient(135deg, #6a11cb, #2575fc, #16a085, #f1c40f, #e67e22); 
-            background-size: 400% 400%; /* Larger for smoother animation */
-            animation: bgPulse 25s ease infinite; /* Slower, more majestic pulse */
-            color:#fff; /* White text for contrast */
-            display:flex;flex-direction:column;align-items:center;padding:15px; /* Reduced padding */
-            overflow-x: hidden; /* Prevent horizontal scroll from animations */
-        }
-        @keyframes bgPulse {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+       /* Base CSS for Material You inspired theme and animations */
+:root {
+    /* Default Dark Mode Colors (keeping these for other elements) */
+    --color-primary: #8e2de2; /* Deep Purple */
+    --color-secondary: #4a00e0; /* Darker Purple */
+    --color-tertiary: #a8c0ff; /* Light Blue */
+    --color-background: #1a1a2e; /* Dark Blue-Purple */
+    --color-surface: rgba(36, 36, 58, 0.8); /* Slightly lighter surface */
+    --color-text-primary: #e0e0e0; /* Light Gray */
+    --color-text-secondary: #a0a0a0; /* Medium Gray */
+    --color-border: rgba(255, 255, 255, 0.15);
+    --color-input-bg: rgba(255, 255, 255, 0.1);
+    --color-input-border: rgba(255, 255, 255, 0.3);
+    --color-accent-base: #00cfff; /* Cyan for accents */
+    --color-success: #8BC34A; /* Green for success */
+    --color-error: #FF6F61; /* Red for error */
+    
+    /* NEW: Rainbow Gradient Colors - Dark Mode */
+    --bg-gradient-color1-dark: #ff0000; /* Red */
+    --bg-gradient-color2-dark: #ff7f00; /* Orange */
+    --bg-gradient-color3-dark: #ffff00; /* Yellow */
+    --bg-gradient-color4-dark: #00ff00; /* Green */
+    --bg-gradient-color5-dark: #0000ff; /* Blue */
+    --bg-gradient-color6-dark: #4b0082; /* Indigo */
+    --bg-gradient-color7-dark: #8b00ff; /* Violet */
 
-        /* --- LIQUID GLASS UI --- */
+    /* RGB versions for rgba() usage */
+    --color-primary-rgb: 142, 45, 226;
+    --color-success-rgb: 139, 195, 74;
+    --color-error-rgb: 255, 111, 97;
+    --color-accent-base-rgb: 0, 207, 255;
+}
+
+/* Light Mode Colors */
+body.light-mode {
+    --color-primary: #673AB7; /* Deep Purple */
+    --color-secondary: #512DA8; /* Darker Purple */
+    --color-tertiary: #7C4DFF; /* Lighter Purple */
+    --color-background: #f0f2f5; /* Light Gray Background */
+    --color-surface: rgba(255, 255, 255, 0.9); /* White surface */
+    --color-text-primary: #212121; /* Dark Gray */
+    --color-text-secondary: #616161; /* Medium Gray */
+    --color-border: rgba(0, 0, 0, 0.1);
+    --color-input-bg: rgba(240, 240, 240, 0.9);
+    --color-input-border: rgba(0, 0, 0, 0.2);
+    --color-accent-base: #00BCD4; /* Cyan for accents */
+    --color-success: #4CAF50; /* Green for success */
+    --color-error: #F44336; /* Red for error */
+    
+    /* NEW: Rainbow Gradient Colors - Light Mode (slightly softer) */
+    --bg-gradient-color1-light: #ff6347; /* Tomato */
+    --bg-gradient-color2-light: #ffa500; /* Orange */
+    --bg-gradient-color3-light: #ffd700; /* Gold */
+    --bg-gradient-color4-light: #32cd32; /* LimeGreen */
+    --bg-gradient-color5-light: #6495ed; /* CornflowerBlue */
+    --bg-gradient-color6-light: #9370db; /* MediumPurple */
+    --bg-gradient-color7-light: #ee82ee; /* Violet */
+
+    /* RGB versions for rgba() usage in light mode */
+    --color-primary-rgb: 103, 58, 183;
+    --color-success-rgb: 76, 175, 80;
+    --color-error-rgb: 244, 67, 54;
+    --color-accent-base-rgb: 0, 188, 212;
+}
+
+/* Global Reset & Core Styling */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Montserrat', sans-serif;}
+html,body {
+    min-height:100vh;
+    font-size: 14px;
+    /* Updated gradient for rainbow effect */
+    background: linear-gradient(
+        135deg, 
+        var(--bg-gradient-color1-dark), 
+        var(--bg-gradient-color2-dark), 
+        var(--bg-gradient-color3-dark), 
+        var(--bg-gradient-color4-dark), 
+        var(--bg-gradient-color5-dark), 
+        var(--bg-gradient-color6-dark), 
+        var(--bg-gradient-color7-dark)
+    ); 
+    background-size: 400% 400%; /* Larger size for animation */
+    background-position: 0% 50%; /* Starting position for animation */
+    animation: bgPulseRainbow 25s ease infinite; /* New animation name for rainbow */
+    color: var(--color-text-primary);
+    display:flex;flex-direction:column;align-items:center;padding:15px;
+    overflow-x: hidden;
+    transition: background-color 0.5s ease, color 0.5s ease; /* Smooth theme transition */
+}
+
+/* Light mode specific background gradient */
+body.light-mode {
+    background: linear-gradient(
+        135deg, 
+        var(--bg-gradient-color1-light), 
+        var(--bg-gradient-color2-light), 
+        var(--bg-gradient-color3-light), 
+        var(--bg-gradient-color4-light), 
+        var(--bg-gradient-color5-light), 
+        var(--bg-gradient-color6-light), 
+        var(--bg-gradient-color7-light)
+    ); 
+    background-size: 400% 400%;
+    background-position: 0% 50%;
+    animation: bgPulseRainbow 25s ease infinite; /* Same animation for light mode */
+}
+
+/* Keyframes for the rainbow animation */
+@keyframes bgPulseRainbow {
+    0% { background-position: 0% 50%; }
+    25% { background-position: 50% 100%; }
+    50% { background-position: 100% 50%; }
+    75% { background-position: 50% 0%; }
+    100% { background-position: 0% 50%; }
+}
+
+        /* --- Material You Card Styling --- */
         .card {
-            /* Base for liquid glass: subtle transparency, strong blur, soft shadows */
-            background: rgba(255, 255, 255, 0.08); /* Very subtle white tint */
-            border-radius: 24px; /* Slightly less rounded */
+            background: var(--color-surface);
+            border-radius: 28px; /* More organic, rounded corners */
             width: 100%; 
-            max-width: 500px; /* Reduced default max-width for medium screens/laptops */
-            margin-bottom: 25px; /* Reduced spacing */
-            padding: 28px; /* Reduced padding */
+            max-width: 550px; /* Slightly increased max-width */
+            margin-bottom: 25px;
+            padding: 32px; /* Increased padding */
             position: relative;
-            overflow: hidden; /* For pseudo-elements */
-
-            backdrop-filter: blur(35px) saturate(180%); /* Slightly reduced blur */
-            -webkit-backdrop-filter: blur(35px) saturate(180%);
-            box-shadow: 0 15px 50px rgba(0,0,0,0.4); /* Slightly reduced shadow */
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Softer, more defined border */
-            
-            /* Internal gradient for 'liquid' appearance - mimics light source */
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.03) 100%);
-
-            /* Subtle light reflection on top-left */
-            &::before {
-                content: '';
-                position: absolute;
-                top: 0; left: 0;
-                width: 100%; height: 100%;
-                background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-                border-radius: inherit;
-                pointer-events: none;
-                z-index: 1; /* Above content for subtle shine */
-                opacity: 0; /* Hidden by default */
-                transition: opacity 0.4s ease; /* Smoother transition */
-            }
-            &:hover::before {
-                opacity: 1; /* Show on hover for interactive feel */
-            }
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2); /* Softer shadow */
+            border: 1px solid var(--color-border);
+            backdrop-filter: blur(15px) saturate(180%); /* Softer blur */
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
 
             transform:translateY(30px);
             opacity:0;
-            animation:fadeInUp .9s ease forwards; /* Slower, smoother fade-in */
+            animation:fadeInUp .9s ease forwards;
         }
-        @keyframes fadeInUp{to{transform:translateY(0);opacity:1)}}
+        @keyframes fadeInUp{to{transform:translateY(0);opacity:1}}
 
-        /* --- HEADINGS, BUTTONS, INPUTS --- */
+        /* --- Headings & Text --- */
         h1{
-            font-family: 'Orbitron', sans-serif; /* Futuristic font */
-            font-size:3rem; /* Reduced font size */
-            margin-bottom:15px; /* Reduced margin */
-            color: #E0F7FA; /* Light cyan */
-            text-shadow: 0 0 20px rgba(100, 255, 255, 0.9), 0 0 40px rgba(100, 255, 255, 0.5); /* Slightly reduced glow */
-            letter-spacing: 3px; /* Reduced letter spacing */
+            font-family: 'Orbitron', sans-serif;
+            font-size:3.2rem;
+            margin-bottom:15px;
+            color: var(--color-accent-base); /* Accent color for main title */
+            text-shadow: 0 0 15px rgba(0, 200, 255, 0.6); /* Subtle glow */
+            letter-spacing: 2px;
             text-align: center;
             line-height: 1.2;
+            transition: color 0.5s ease, text-shadow 0.5s ease;
         }
-        #greeting{font-size:1.1rem;margin-bottom:15px;opacity:.95; text-align: center; color: #BBDEFB;} /* Reduced font size */
-        .quote{font-size:1.2rem;font-style:italic;opacity:.85;margin-bottom:25px;color:#CFD8DC; text-align: center; line-height: 1.5;} /* Reduced font size */
+        #greeting{font-size:1.1rem;margin-bottom:15px;opacity:.9; color: #ffffff; text-align: center;}
+        .quote{font-size:1.2rem;font-style:italic;opacity:.8;margin-bottom:25px;color: #ffffff; text-align: center; line-height: 1.5;}
 
-        input,select,textarea,button{
-            border:none;
-            transition:all .4s ease; /* Smoother, slightly slower transitions */
-            font-size: 1rem; /* Reduced font size */
-        }
+        /* --- Inputs, Selects, Textareas --- */
         input,select,textarea{
-            width:100%;padding:14px;margin-bottom:18px; /* Reduced padding, spacing */
-            background:rgba(255,255,255,0.15);color:#fff; /* Lighter, clearer glass for inputs */
-            border:1px solid rgba(255,255,255,0.3); /* Defined border */
-            box-shadow: inset 0 2px 6px rgba(0,0,0,0.15); /* Slightly reduced inner shadow */
-            border-radius: 12px; /* Keep inputs rectangular */
+            width:100%;padding:14px;margin-bottom:18px;
+            background:var(--color-input-bg);
+            color:var(--color-text-primary);
+            border:1px solid var(--color-input-border);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 16px; /* Material You rounded inputs */
+            transition: all .3s ease;
         }
-        input::placeholder, textarea::placeholder {color: rgba(255,255,255,0.7);}
-        select option {background: #1a1a2e; color: #eee;} /* Darker background for select options */
+        input::placeholder, textarea::placeholder {color: var(--color-text-secondary);}
+        select option {background: var(--color-surface); color: var(--color-text-primary);}
 
         input:focus,select:focus,textarea:focus{
-            background:rgba(255,255,255,0.25);
-            box-shadow:0 0 0 3px rgba(173, 216, 230, 0.7), 0 0 20px rgba(173, 216, 230, 0.9); /* Slightly reduced glow */
+            background:rgba(255,255,255,0.2); /* Slightly brighter on focus */
+            box-shadow:0 0 0 3px var(--color-accent-base), 0 0 15px var(--color-accent-base); /* Accent glow */
             outline:none;
-            transform: scale(1.005); /* Very subtle grow effect on focus */
+            transform: scale(1.005);
         }
+
+        /* --- Buttons (Material You Inspired) --- */
         button{
-            /* Dynamic gradient for buttons */
-            background: linear-gradient(90deg, #A8C0FF, #392EDD); /* Blue-purple gradient */
-            color:#fff; /* White text */
-            padding:12px 24px; /* Reduced padding */
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            color:#fff;
+            padding:12px 24px;
             font-weight:700;
             cursor:pointer;
-            border-radius:50px; /* Adjusted to 50px for a pill shape */
-            border:1px solid rgba(255,255,255,0.3); /* Subtle glassy border */
-            box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* Reduced shadow */
+            border-radius:28px; /* Organic button shape */
+            border:none; /* No hard border */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
             position: relative;
             z-index: 0;
             overflow: hidden;
+            transition:all .3s ease;
+            font-size: 1rem;
         }
         button:hover{
-            background: linear-gradient(90deg, #8A2BE2, #6A5ACD); /* Darker purple on hover */
-            color:#fff;
-            box-shadow:0 0 25px rgba(138,43,226,0.8); /* Slightly reduced glow */
-            transform:scale(1.02); /* Subtle bump effect */
+            background: linear-gradient(90deg, var(--color-secondary), var(--color-primary)); /* Reverse gradient on hover */
+            box-shadow:0 0 20px rgba(138,43,226,0.6); /* Softer glow */
+            transform:scale(1.02);
         }
         button:active{transform:scale(0.98);box-shadow:0 3px 10px rgba(0,0,0,0.4);}
         .clear-btn{
-            background:linear-gradient(90deg, #FF6F61, #DE4B70); /* Red-pink gradient for clear */
+            background:linear-gradient(90deg, var(--color-error), #DE4B70);
             color:#fff;
         }
         .clear-btn:hover{
-            background:linear-gradient(90deg, #DE4B70, #FF6F61); /* Reverse gradient on hover */
-            box-shadow:0 0 25px rgba(255,111,97,0.8);
+            background:linear-gradient(90deg, #DE4B70, var(--color-error));
+            box-shadow:0 0 20px rgba(255,111,97,0.6);
         }
 
-        /* --- Radio Group and Calendar --- */
-        .radio-group{display:flex;gap:15px;margin-bottom:20px;flex-wrap: wrap; justify-content: center;} /* Reduced gap, spacing */
+        /* --- Radio Group & Calendar --- */
+        .radio-group{display:flex;gap:15px;margin-bottom:20px;flex-wrap: wrap; justify-content: center;}
         .radio-group label {
-            background: rgba(255,255,255,0.12); /* Lighter base for radio */
-            padding: 10px 16px; /* Reduced padding */
-            border-radius: 12px; /* Slightly less rounded */
+            background: var(--color-input-bg);
+            padding: 10px 18px;
+            border-radius: 20px; /* More rounded radio buttons */
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid var(--color-input-border);
             display: flex;
             align-items: center;
-            gap: 8px; /* Reduced gap */
-            color: #E3F2FD; /* Light blue */
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15); /* Reduced shadow */
+            gap: 8px;
+            color: var(--color-text-primary);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
-        .radio-group input[type="radio"] {display: none;} /* Hide actual radio button */
-        .radio-group input[type="radio"] + label::before { /* Custom radio button */
+        .radio-group input[type="radio"] {display: none;}
+        .radio-group input[type="radio"] + label::before {
             content: '';
             display: inline-block;
-            width: 16px; height: 16px; /* Reduced size */
+            width: 18px; height: 18px;
             border-radius: 50%;
-            border: 2px solid #A7C5F9; /* Softer blue border */
+            border: 2px solid var(--color-accent-base); /* Accent color border */
             background-color: transparent;
             margin-right: 5px;
             transition: all 0.2s ease;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); /* Reduced inner shadow */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
         }
         .radio-group input[type="radio"]:checked + label {
-            background: linear-gradient(45deg, #8A2BE2, #4F4ED5); /* Vibrant gradient on selection */
-            border-color: #BBDEFB; /* Brighter border */
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.7); /* Reduced glow */
+            background: linear-gradient(45deg, var(--color-primary), var(--color-tertiary)); /* Vibrant gradient on selection */
+            border-color: var(--color-accent-base);
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
             color: #fff; /* White text when selected */
         }
         .radio-group input[type="radio"]:checked + label::before {
-            background-color: #fff; /* White fill on checked */
+            background-color: #fff;
             border-color: #fff;
-            box-shadow: 0 0 8px rgba(255,255,255,0.9); /* Reduced glow */
+            box-shadow: 0 0 8px rgba(255,255,255,0.7);
         }
         
-        .stats, .goals { margin-bottom:20px; color:#E0E0E0; font-size:1.1rem; line-height: 1.7;} /* Reduced font size */
+        .stats, .goals { margin-bottom:20px; color:var(--color-text-primary); font-size:1.1rem; line-height: 1.7;}
         .calendar{
-            display:flex;gap:12px; /* Reduced gap */
-            overflow-x:auto; /* Allow horizontal scroll for many days */
-            margin-bottom:25px;padding-bottom:8px; /* Reduced spacing */
-            padding: 6px; /* Reduced padding */
-            border-radius: 15px; /* Slightly less rounded */
-            background: rgba(255,255,255,0.08); /* Subtle background for calendar */
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: inset 0 0 6px rgba(0,0,0,0.15); /* Reduced shadow */
+            display:flex;gap:12px;
+            overflow-x:auto;
+            margin-bottom:25px;padding-bottom:8px;
+            padding: 6px;
+            border-radius: 20px; /* More rounded calendar container */
+            background: var(--color-input-bg);
+            border: 1px solid var(--color-input-border);
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
         }
         .calendar div{
-            padding:10px 16px;border-radius:12px; /* Reduced padding, less rounded */
-            background:rgba(255,255,255,0.15);color:#D1C4E9; /* Light purple-blue */
+            padding:10px 18px;border-radius:16px; /* Rounded calendar days */
+            background:rgba(255,255,255,0.1);color:var(--color-text-primary);
             cursor:pointer;transition:all .3s ease;
             border:1px solid rgba(255,255,255,0.2);
-            min-width: 60px; /* Reduced size */
+            min-width: 65px; /* Slightly larger days */
             text-align: center;
             font-weight: 600;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* Reduced shadow */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .calendar div:hover{
-            background:rgba(255,255,255,0.25); 
-            transform: translateY(-5px) scale(1.05); /* Slightly reduced lift */
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            background:rgba(255,255,255,0.2); 
+            transform: translateY(-3px) scale(1.03); /* Softer lift */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
         .calendar .today{
-            border:2px solid #8BC34A; /* Brighter green highlight for today */
-            box-shadow:0 0 12px rgba(139, 195, 74, 0.9), inset 0 0 6px rgba(139, 195, 74, 0.5); /* Slightly reduced glow */
-            background: linear-gradient(45deg, #8BC34A, #AED581); /* Gradient for today */
-            color: #333; /* Darker text for contrast on bright today */
+            border:2px solid var(--color-accent-base); /* Accent color highlight for today */
+            box-shadow:0 0 12px rgba(var(--color-accent-base-rgb), 0.7), inset 0 0 6px rgba(var(--color-accent-base-rgb), 0.4);
+            background: linear-gradient(45deg, var(--color-accent-base), #61DAFB);
+            color: var(--color-background); /* Darker text for contrast on bright today */
             font-weight: 700;
         }
+        .calendar .has-study {
+            background-color: rgba(var(--color-primary-rgb), 0.2); /* Subtle highlight for study days */
+            border-color: var(--color-primary);
+        }
+        .calendar .goal-achieved {
+            background: linear-gradient(45deg, var(--color-success), #AED581); /* Green gradient for goal achieved */
+            border-color: var(--color-success);
+            color: #333;
+        }
+
 
         #clock{
-            position:fixed;top:20px;right:20px;padding:10px 16px;background:rgba(0,0,0,0.3);color:#fff;border-radius:20px; /* Reduced padding, less rounded */
-            font-family: 'Orbitron', sans-serif; font-size:1rem; letter-spacing: 1px; /* Reduced font size */
-            box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* Reduced shadow */
-            backdrop-filter: blur(10px); /* Reduced blur */
+            position:fixed;top:20px;right:20px;padding:10px 18px;background:var(--color-surface);color:var(--color-text-primary);border-radius:24px;
+            font-family: 'Orbitron', sans-serif; font-size:1rem; letter-spacing: 1px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.25);
-            animation: pulseClock 2s infinite alternate; /* Subtle pulse for clock */
+            border: 1px solid var(--color-border);
+            animation: pulseClock 2s infinite alternate;
+            z-index: 10; /* Ensure clock stays on top */
         }
         @keyframes pulseClock {
             from { transform: scale(1); opacity: 1; }
@@ -222,329 +312,724 @@
         }
 
         /* Goal Progress Bar */
-        #goalProgress {height:12px;border-radius:6px;background:rgba(255,255,255,0.3);overflow:hidden;margin:12px 0; border: 1px solid rgba(255,255,255,0.4);} /* Reduced height, less rounded */
-        #goalFill{height:100%;width:0%;background:linear-gradient(90deg,#8e2de2,#4a00e0);transition:width .9s cubic-bezier(0.68, -0.55, 0.265, 1.55);} /* Smoother, springy transition */
+        #goalProgress {height:12px;border-radius:6px;background:var(--color-input-bg);overflow:hidden;margin:12px 0; border: 1px solid var(--color-input-border);}
+        #goalFill{height:100%;width:0%;background:linear-gradient(90deg,var(--color-primary),var(--color-secondary));transition:width .9s cubic-bezier(0.68, -0.55, 0.265, 1.55);}
         #goalFill.complete {
-            background: linear-gradient(90deg, #A8ED8C, #6AC433); /* Bright green gradient on completion */
-            animation: goalComplete 1.5s ease-out forwards; /* More prominent animation on completion */
-            box-shadow: 0 0 25px rgba(106, 196, 51, 0.9); /* Reduced glow */
+            background: linear-gradient(90deg, var(--color-success), #6AC433);
+            animation: goalComplete 1.5s ease-out forwards;
+            box-shadow: 0 0 20px rgba(var(--color-success-rgb), 0.7);
         }
         @keyframes goalComplete {
             0% { transform: scaleX(0.9); opacity: 0.8; }
-            50% { transform: scaleX(1.05); opacity: 1; box-shadow: 0 0 30px #4a00e0; } /* Reduced glow */
+            50% { transform: scaleX(1.05); opacity: 1; box-shadow: 0 0 25px var(--color-primary); }
             100% { transform: scaleX(1); opacity: 1; }
         }
 
         /* Streak Display */
         #streakDisplay {
             display: flex;
-            gap: 8px; /* Reduced gap */
+            gap: 8px;
             margin-top: 15px;
             margin-bottom: 15px;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            padding: 10px; /* Reduced padding */
-            background: rgba(255,255,255,0.08); /* Lighter background for streak display */
-            border-radius: 15px; /* Slightly less rounded */
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: inset 0 0 6px rgba(0,0,0,0.15); /* Reduced shadow */
+            padding: 10px;
+            background: var(--color-input-bg);
+            border-radius: 20px;
+            border: 1px solid var(--color-input-border);
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
         }
         .streak-dot {
-            width: 18px; /* Reduced size */
+            width: 18px;
             height: 18px;
             border-radius: 50%;
-            background-color: rgba(255,255,255,0.3); /* Inactive - lighter */
-            border: 1px solid rgba(255,255,255,0.45);
+            background-color: rgba(255,255,255,0.2); /* Inactive - lighter */
+            border: 1px solid rgba(255,255,255,0.3);
             transition: all 0.4s ease;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.15); /* Reduced inner shadow */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
         .streak-dot.active {
-            background: radial-gradient(circle at 30% 30%, #aaffea, #00cfff); /* Active glow */
-            border-color: #61DAFB; /* Brighter border for active */
-            box-shadow: 0 0 15px #61DAFB, 0 0 25px rgba(97, 218, 251, 0.7); /* Reduced glow */
-            animation: streakGlow 2s infinite alternate; /* Slower, more prominent pulse */
+            background: radial-gradient(circle at 30% 30%, var(--color-accent-base), #00cfff);
+            border-color: var(--color-accent-base);
+            box-shadow: 0 0 15px rgba(var(--color-accent-base-rgb), 0.7), 0 0 25px rgba(var(--color-accent-base-rgb), 0.5);
+            animation: streakGlow 2s infinite alternate;
         }
         @keyframes streakGlow {
-            from { box-shadow: 0 0 15px #61DAFB; }
-            to { box-shadow: 0 0 20px #61DAFB, 0 0 35px rgba(97, 218, 251, 0.6); } /* Reduced glow */
+            from { box-shadow: 0 0 15px rgba(var(--color-accent-base-rgb), 0.7); }
+            to { box-shadow: 0 0 20px rgba(var(--color-accent-base-rgb), 0.7), 0 0 35px rgba(var(--color-accent-base-rgb), 0.4); }
         }
 
         /* --- AUTH POPUP --- */
         #authOverlay {
             position:fixed;inset:0;
-            backdrop-filter:blur(18px) saturate(180%); /* Slightly reduced blur */
-            background:rgba(0,0,0,0.8); /* Darker overlay */
+            backdrop-filter:blur(18px) saturate(180%);
+            background:rgba(0,0,0,0.8);
             display:flex;align-items:center;justify-content:center;
             z-index:9999;animation:fadeIn .8s ease-in-out;
         }
         #authPopup {
-            background:rgba(255,255,255,0.2); /* Lighter popup background */
-            backdrop-filter:blur(25px) saturate(200%); /* Slightly reduced blur */
+            background:var(--color-surface);
+            backdrop-filter:blur(25px) saturate(200%);
             -webkit-backdrop-filter:blur(25px) saturate(200%);
-            padding:35px;border-radius:25px;max-width:450px;width:90%; /* Reduced padding, less rounded, reduced max-width */
-            box-shadow:0 20px 60px rgba(0,0,0,0.5); /* Reduced shadow */
-            text-align:center;color:#fff;
-            animation:slideUp .9s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Springy slide-up */
-            border:1px solid rgba(255,255,255,0.4);
+            padding:35px;border-radius:28px;max-width:450px;width:90%;
+            box-shadow:0 20px 60px rgba(0,0,0,0.4);
+            text-align:center;color:var(--color-text-primary);
+            animation:slideUp .9s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border:1px solid var(--color-border);
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.15));
         }
-        #authPopup::before { /* Inner light reflection for popup */
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, transparent 50%);
-            border-radius: inherit;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        #authPopup h2 {font-family: 'Orbitron', sans-serif; margin-bottom: 20px; font-size: 2rem; color: #A7FFEB;} /* Reduced font size */
+        #authPopup h2 {font-family: 'Orbitron', sans-serif; margin-bottom: 20px; font-size: 2rem; color: var(--color-accent-base);}
         #authPopup input {
-            padding:14px;width:100%;margin-bottom:25px; /* Reduced padding, spacing */
-            background:rgba(255,255,255,0.4);color:#fff;
-            border:1px solid rgba(255,255,255,0.5);
-            border-radius:12px; /* Reduced roundedness */
-            box-shadow: inset 0 2px 6px rgba(0,0,0,0.15); /* Reduced inner shadow */
+            padding:14px;width:100%;margin-bottom:25px;
+            background:var(--color-input-bg);color:var(--color-text-primary);
+            border:1px solid var(--color-input-border);
+            border-radius:16px;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
         }
-        #authPopup input:focus{box-shadow:0 0 0 3px #A7FFEB,0 0 20px rgba(167, 255, 235, 0.9);} /* Reduced glow */
+        #authPopup input:focus{box-shadow:0 0 0 3px var(--color-accent-base),0 0 20px rgba(var(--color-accent-base-rgb), 0.7);}
         #authPopup button{
-            padding:14px 30px;background:linear-gradient(45deg, #00C4CC, #4D8EFF); color:#fff; /* Vibrant button gradient */
-            border:none;border-radius:50px;cursor:pointer;font-weight:700; /* Adjusted to 50px for a pill shape */
-            transition:all .5s ease; box-shadow:0 8px 20px rgba(0,196,204,0.6); /* Reduced shadow */
+            padding:14px 30px;background:linear-gradient(45deg, var(--color-accent-base), #4D8EFF); color:#fff;
+            border:none;border-radius:28px;cursor:pointer;font-weight:700;
+            transition:all .5s ease; box-shadow:0 8px 20px rgba(0,196,204,0.4);
             position: relative;
-            z-index: 0;
             overflow: hidden;
         }
         #authPopup button:hover{
-            background:linear-gradient(45deg, #4D8EFF, #00C4CC); transform: translateY(-3px); box-shadow:0 12px 25px rgba(0,196,204,0.7); /* Reduced shadow */
-        }
-        #authPopup button::before { /* Border animation for auth button */
-            content: '';
-            position: absolute;
-            inset: -3px; /* Make border slightly larger */
-            border-radius: inherit;
-            background: linear-gradient(45deg, #ff005e, #00cfff, #00ff9d, #ffae00, #ff005e);
-            background-size: 500%;
-            animation: borderSpin 3.5s linear infinite; /* Faster spin for popup button */
-            z-index: -1;
-            filter: blur(4px); /* Soften the glowing border */
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        #authPopup button:hover::before {
-            opacity: 1;
+            background:linear-gradient(45deg, #4D8EFF, var(--color-accent-base)); transform: translateY(-3px); box-shadow:0 12px 25px rgba(0,196,204,0.5);
         }
 
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes slideUp{from{transform:translateY(100px);opacity:0}to{transform:translateY(0);opacity:1}}
         @keyframes fadeOut{to{opacity:0; transform: translateY(-40px);}}
 
-        /* === GOOGLE TV STYLE BORDER ANIMATION === */
-        button {
-            position: relative;
-            z-index: 0;
-            overflow: hidden;
-            transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease; /* Smoother base transitions */
-        }
-
-        button::before {
-            content: '';
-            position: absolute;
-            inset: -3px; /* Slightly larger border for glow effect */
-            border-radius: inherit;
-            padding: 4px; /* border thickness */
-            background: linear-gradient(45deg, #ff005e, #00cfff, #00ff9d, #ffae00, #ff005e);
-            background-size: 500%;
-            animation: borderSpin 7s linear infinite; /* Slower, more subtle spin for main buttons */
-            z-index: -1;
-            filter: blur(5px); /* Soften the glowing border */
+        /* --- Custom Message Box --- */
+        #messageBox {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-surface);
+            color: var(--color-text-primary);
+            padding: 15px 25px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
             opacity: 0;
-            transition: opacity 0.6s ease; /* Slower fade-in for border */
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+            border: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+        #messageBox.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-10px);
+        }
+        #messageBox.error { background: var(--color-error); color: #fff; }
+        #messageBox.success { background: var(--color-success); color: #fff; }
 
-        button:hover::before {
+        /* --- Confirmation Modal (for Clear All Logs) --- */
+        #confirmModalOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #confirmModalOverlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        #confirmModal {
+            background: var(--color-surface);
+            padding: 30px;
+            border-radius: 28px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            color: var(--color-text-primary);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            border: 1px solid var(--color-border);
+        }
+        #confirmModalOverlay.show #confirmModal {
+            transform: translateY(0);
             opacity: 1;
         }
+        #confirmModal h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--color-text-primary);
+        }
+        #confirmModal .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        #confirmModal button {
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
 
-        @keyframes borderSpin {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* --- Accent Color Picker --- */
+        #accentColorPicker {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .color-swatch {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .color-swatch:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .color-swatch.selected {
+            border-color: var(--color-text-primary); /* Highlight selected swatch */
+            box-shadow: 0 0 0 3px var(--color-accent-base), 0 0 10px rgba(var(--color-accent-base-rgb), 0.7);
+        }
+
+        /* --- Pomodoro Timer --- */
+        #pomodoroTimer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        #timerDisplay {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: var(--color-accent-base);
+            text-shadow: 0 0 10px rgba(var(--color-accent-base-rgb), 0.5);
+            margin-bottom: 10px;
+        }
+        #timerControls {
+            display: flex;
+            gap: 15px;
+        }
+        #timerControls button {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            border-radius: 20px;
+        }
+        #pomodoroSettings {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            align-items: center;
+            color: var(--color-text-secondary);
+        }
+        #pomodoroSettings input {
+            width: 80px;
+            margin-bottom: 0;
+            padding: 8px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* --- To-Do List --- */
+        #todoListContainer {
+            margin-top: 20px;
+        }
+        #todoInput {
+            margin-bottom: 10px;
+        }
+        .todo-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--color-input-bg);
+            padding: 10px 15px;
+            border-radius: 16px;
+            margin-bottom: 8px;
+            border: 1px solid var(--color-input-border);
+            transition: all 0.3s ease;
+        }
+        .todo-item.completed {
+            opacity: 0.7;
+            text-decoration: line-through;
+            background: rgba(var(--color-success-rgb), 0.1);
+        }
+        .todo-item span {
+            flex-grow: 1;
+            color: var(--color-text-primary);
+        }
+        .todo-item button {
+            background: none;
+            border: none;
+            color: var(--color-error);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            box-shadow: none;
+        }
+        .todo-item button:hover {
+            color: #fff;
+            background: var(--color-error);
+            transform: scale(1.1);
+        }
+        .todo-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+            accent-color: var(--color-primary); /* Material You checkbox color */
+        }
+
+        /* --- Data Visualizations --- */
+        #chartsContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .chart-wrapper {
+            background: var(--color-input-bg);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid var(--color-input-border);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .chart-wrapper h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-align: center;
+            color: var(--color-accent-base);
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* --- Gamification --- */
+        #gamificationSection {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #levelDisplay {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+        #xpProgress {
+            height: 10px;
+            background: var(--color-input-bg);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0 auto 15px;
+            max-width: 80%;
+            border: 1px solid var(--color-input-border);
+        }
+        #xpFill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--color-accent-base), var(--color-tertiary));
+            transition: width 0.5s ease-out;
+        }
+        #xpText {
+            color: var(--color-text-secondary);
+        }
+        #achievementsGrid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .achievement-badge {
+            background: var(--color-input-bg);
+            padding: 15px;
+            border-radius: 20px;
+            text-align: center;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--color-input-border);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        .achievement-badge.earned {
+            opacity: 1;
+            background: linear-gradient(135deg, var(--color-success), #AED581);
+            color: #333;
+            box-shadow: 0 5px 15px rgba(var(--color-success-rgb), 0.5);
+            transform: scale(1.05);
+        }
+        .achievement-badge.earned:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(var(--color-success-rgb), 0.7);
+        }
+        .achievement-badge .icon {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+        .achievement-badge .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* --- Filtering & Search --- */
+        #filterSearchContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        #filterSearchContainer input, #filterSearchContainer select {
+            margin-bottom: 0; /* Override default input margin */
+        }
+        #logListContainer {
+            margin-top: 20px;
+            max-height: 400px; /* Scrollable log list */
+            overflow-y: auto;
+            padding-right: 10px; /* Space for scrollbar */
+        }
+        .log-entry {
+            background: var(--color-input-bg);
+            padding: 15px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            border: 1px solid var(--color-input-border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            color: var(--color-text-primary);
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        .log-entry:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .log-entry strong { color: var(--color-accent-base); }
+        .log-entry em { color: var(--color-text-secondary); }
+
+        /* General utility classes for flexbox within cards */
+        .flex-col-gap-md {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .flex-row-gap-md {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
         }
 
         /* --- MEDIA QUERIES FOR RESPONSIVENESS --- */
-        /* Desktop / Larger Screens (min-width for default size) */
         @media (min-width: 1024px) {
-            html, body { font-size: 15px; /* Slightly larger base font for desktop */
-            padding: 20px; }
-            .card {
-                max-width: 580px; /* Adjusted max-width for large desktops */
-                padding: 35px;
-                border-radius: 28px;
-            }
-            h1 { font-size: 3.5rem; letter-spacing: 4px; }
+            html, body { font-size: 15px; padding: 20px; }
+            .card { max-width: 650px; padding: 40px; border-radius: 32px; }
+            h1 { font-size: 4rem; letter-spacing: 3px; }
             #greeting { font-size: 1.2rem; }
-            .quote { font-size: 1.3rem; }
-            input, select, textarea, button { font-size: 1.15rem; padding: 16px; border-radius: 50px; } /* Adjusted button border-radius */
-            input, select, textarea { border-radius: 15px; } /* Keep inputs rectangular */
-            .radio-group label { padding: 12px 20px; border-radius: 15px; }
-            .radio-group input[type="radio"] + label::before { width: 18px; height: 18px; }
-            .calendar div { padding: 14px 20px; border-radius: 15px; min-width: 70px; font-size: 1rem; }
-            #clock { font-size: 1.2rem; top: 25px; right: 25px; padding: 12px 20px; border-radius: 25px; }
-            #goalProgress { height: 15px; border-radius: 8px; }
+            .quote { font-size: 1.9rem; font-family: Gabriola;}
+            input, select, textarea, button { font-size: 1.1rem; padding: 16px; border-radius: 24px; }
+            .radio-group label { padding: 12px 22px; border-radius: 24px; }
+            .calendar div { padding: 12px 20px; border-radius: 18px; min-width: 70px; font-size: 1rem; }
+            #clock { font-size: 1.2rem; top: 25px; right: 25px; padding: 12px 20px; border-radius: 28px; }
+            #goalProgress { height: 14px; border-radius: 7px; }
             .streak-dot { width: 20px; height: 20px; }
-            #authPopup { padding: 40px; border-radius: 30px; max-width: 500px; }
-            #authPopup h2 { font-size: 2.2rem; }
-            #authPopup input { padding: 16px; border-radius: 15px; }
-            #authPopup button { padding: 16px 35px; border-radius: 50px; } /* Adjusted button border-radius */
+            #authPopup { padding: 45px; border-radius: 32px; max-width: 500px; }
+            #authPopup h2 { font-size: 2.5rem; }
+            #authPopup input { padding: 16px; border-radius: 18px; }
+            #authPopup button { padding: 16px 35px; border-radius: 28px; }
+            #timerDisplay { font-size: 4rem; }
+            #timerControls button { padding: 12px 25px; font-size: 1rem; }
+            #pomodoroSettings input { width: 90px; }
+            .achievement-badge { width: 130px; height: 130px; padding: 20px; border-radius: 24px; }
+            .achievement-badge .icon { font-size: 3rem; }
+            .achievement-badge .name { font-size: 0.95rem; }
         }
 
-        /* Tablets and larger phones (default for medium screens) */
-        @media (max-width: 1023px) and (min-width: 601px) {
-            html, body { padding: 15px; font-size: 14px; }
-            h1 { font-size: 3rem; margin-bottom: 15px; letter-spacing: 3px;}
-            #greeting { font-size: 1.1rem; margin-bottom: 18px; }
-            .quote { font-size: 1.2rem; margin-bottom: 25px;}
-            #clock { font-size: 1.1rem; right: 20px; top: 20px; padding: 10px 16px; border-radius: 20px; }
-            .card { padding: 28px; margin-bottom: 25px; border-radius: 24px; max-width: 500px; }
-            input, select, textarea, button { padding: 14px; margin-bottom: 18px; font-size: 1rem; border-radius: 50px; } /* Adjusted button border-radius */
-            input, select, textarea { border-radius: 12px; } /* Keep inputs rectangular */
-            .radio-group { gap: 15px; margin-bottom: 20px; }
-            .radio-group label { padding: 10px 16px; border-radius: 12px; }
-            .radio-group input[type="radio"] + label::before { width: 16px; height: 16px; }
-            .calendar { gap: 12px; padding-bottom: 8px; }
-            .calendar div { padding: 10px 16px; font-size: 0.9rem; min-width: 60px; border-radius: 12px; }
-            #streakDisplay { gap: 8px; padding: 10px; border-radius: 15px; }
-            .streak-dot { width: 18px; height: 18px; }
-            #authPopup { padding: 35px; border-radius: 25px; max-width: 450px; }
-            #authPopup h2 { font-size: 2.0rem; } /* Adjusted font size */
-            #authPopup input { padding: 14px; border-radius: 12px; }
-            #authPopup button { padding: 14px 30px; border-radius: 50px; } /* Adjusted button border-radius */
-        }
-
-        /* Smaller phones (max-width for mobile optimization) */
         @media (max-width: 600px) {
             html, body { padding: 10px; font-size: 13px; }
-            h1 { font-size: 2.2rem; margin-bottom: 10px; letter-spacing: 2px;}
+            h1 { font-size: 2rem; margin-bottom: 10px; letter-spacing: 1px;}
             #greeting { font-size: 0.9rem; margin-bottom: 12px; }
-            .quote { font-size: 1rem; margin-bottom: 18px;}
+            .quote { font-size: 0.95rem; margin-bottom: 18px;}
             #clock { font-size: 0.85rem; right: 10px; top: 10px; padding: 7px 12px; border-radius: 18px; }
-            .card { padding: 18px; /* Further reduced padding */ margin-bottom: 18px; border-radius: 16px; } /* Adjusted border-radius */
-            input, select, textarea, button { padding: 10px; /* Further reduced padding */ margin-bottom: 12px; font-size: 0.9rem; border-radius: 50px; } /* Adjusted button border-radius */
-            input, select, textarea { border-radius: 10px; } /* Keep inputs rectangular */
-            .radio-group { flex-direction: column; gap: 8px; align-items: stretch;} /* Stack radios vertically */
-            .radio-group label { padding: 7px 10px; border-radius: 10px; justify-content: center; }
-            .radio-group input[type="radio"] + label::before { width: 14px; height: 14px; }
-            .button-row { flex-direction: column; gap: 8px; } /* Stack buttons vertically */
-            .calendar { gap: 6px; padding-bottom: 4px; } /* Further reduced gap and padding */
-            .calendar div { padding: 8px 12px; font-size: 0.8rem; min-width: 45px; border-radius: 8px; } /* Further reduced size */
-            #streakDisplay { gap: 4px; padding: 7px; border-radius: 10px; } /* Further reduced size */
-            .streak-dot { width: 15px; height: 15px; } /* Further reduced size */
-            #authPopup { padding: 22px; /* Further reduced padding */ border-radius: 18px; max-width: 320px; } /* Adjusted max-width */
-            #authPopup h2 { font-size: 1.5rem; margin-bottom: 12px;} /* Reduced font size */
-            #authPopup input { padding: 10px; margin-bottom: 15px; } /* Reduced padding */
-            #authPopup button { padding: 10px 20px; border-radius: 50px; } /* Adjusted button border-radius */
-        }
-        @media (max-width: 400px) { /* Very small phones */
-            html, body { padding: 8px; font-size: 12px; }
-            h1 { font-size: 1.8rem; letter-spacing: 1px;}
-            #greeting, .quote { font-size: 0.8rem; }
-            #clock { font-size: 0.75rem; right: 8px; top: 8px; padding: 5px 8px; border-radius: 10px; }
-            .card { padding: 15px; margin-bottom: 15px; border-radius: 12px; }
-            input, select, textarea, button { padding: 8px; margin-bottom: 8px; font-size: 0.85rem; border-radius: 50px; } /* Adjusted button border-radius */
-            input, select, textarea { border-radius: 8px; } /* Keep inputs rectangular */
-            .radio-group { gap: 6px; }
-            .radio-group label { padding: 6px 8px; border-radius: 8px; }
-            .radio-group input[type="radio"] + label::before { width: 10px; height: 10px; }
-            .button-row button { padding: 8px 12px; }
-            .calendar div { padding: 8px 12px; font-size: 0.75rem; min-width: 45px; border-radius: 8px; }
-            #streakDisplay { gap: 3px; padding: 6px; border-radius: 10px; }
-            .streak-dot { width: 14px; height: 14px; }
-            #authPopup { padding: 18px; border-radius: 18px; }
-            #authPopup h2 { font-size: 1.4rem; }
-            #authPopup input { padding: 10px; margin-bottom: 15px; }
-            #authPopup button { padding: 10px 20px; border-radius: 50px; } /* Adjusted button border-radius */
+            .card { padding: 20px; margin-bottom: 18px; border-radius: 20px; }
+            input, select, textarea, button { padding: 10px; margin-bottom: 12px; font-size: 0.9rem; border-radius: 16px; }
+            .radio-group { flex-direction: column; gap: 8px; align-items: stretch;}
+            .radio-group label { padding: 8px 12px; border-radius: 16px; justify-content: center; }
+            .button-row { flex-direction: column; gap: 10px; }
+            .calendar { gap: 8px; padding-bottom: 6px; }
+            .calendar div { padding: 8px 12px; font-size: 0.8rem; min-width: 50px; border-radius: 12px; }
+            #streakDisplay { gap: 6px; padding: 8px; border-radius: 16px; }
+            .streak-dot { width: 16px; height: 16px; }
+            #authPopup { padding: 25px; border-radius: 20px; max-width: 350px; }
+            #authPopup h2 { font-size: 1.8rem; margin-bottom: 15px;}
+            #authPopup input { padding: 12px; border-radius: 16px; }
+            #authPopup button { padding: 12px 25px; border-radius: 20px; }
+            #timerDisplay { font-size: 3rem; }
+            #timerControls { flex-direction: column; gap: 10px; }
+            #pomodoroSettings { flex-direction: column; gap: 8px; }
+            #pomodoroSettings input { width: 100px; }
+            .achievement-badge { width: 100px; height: 100px; padding: 10px; border-radius: 16px; }
+            .achievement-badge .icon { font-size: 2rem; }
+            .achievement-badge .name { font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
-    <div id="authOverlay" style="display:none;">
+    <!-- Custom Message Box -->
+    <div id="messageBox" class="text-sm"></div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModalOverlay" style="display:none;">
+        <div id="confirmModal">
+            <h3>Are you sure?</h3>
+            <p id="confirmMessage" class="text-sm mb-4"></p>
+            <div class="button-row">
+                <button id="confirmYes" class="clear-btn">Yes</button>
+                <button id="confirmNo">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Overlay -->
+    <div id="authOverlay" class="flex" style="display:none;">
         <div id="authPopup">
             <h2 id="authTitle">🔐 Verify it's you</h2><br>
             <input id="authPass" type="password" placeholder="Enter Password" />
             <button onclick="checkPassword()">Unlock the Beast</button>
-            <p id="userIdDisplay" style="margin-top: 15px; font-size: 0.85rem; opacity: 0.7; color: #B2EBF2;"></p>
         </div>
     </div>
 
-    <h1>🌟 Legendary Beastie Tracker</h1>
-    <div id="greeting"></div>
-    <div class="quote" id="quote">“Master your mind, master your future.”</div>
-    <div id="clock"></div>
-    <button onclick="toggleDarkMode()">🌓 Toggle Dark Mode</button><br>
-
-    <div class="card">
-        <label>Subject</label>
-        <select id="subject"><option value="">Select</option><option>Tamil</option><option>English</option><option>Maths</option><option>Science</option><option>Social Science</option><option>Coding</option><option>General Knowledge</option></select>
-        <label>Time Spent (minutes)</label>
-        <input id="time" type="number" placeholder="e.g. 45" min="0">
-        <label>Notes</label>
-        <textarea id="notes" rows="2" placeholder="e.g. Chapter 2 revision; challenging topic."></textarea>
-        <div class="radio-group">
-            <input name="sessionTime" type="radio" id="morningRadio" value="Morning">
-            <label for="morningRadio">🌅 Morning</label>
-            <input name="sessionTime" type="radio" id="eveningRadio" value="Evening">
-            <label for="eveningRadio">🌃 Evening</label>
-            <input name="sessionTime" type="radio" id="afternoonRadio" value="Afternoon">
-            <label for="afternoonRadio">☀️ Afternoon</label>
+    <!-- Main Content (initially hidden until unlocked) -->
+    <div id="mainContent" class="card w-full mb-6">
+        <!-- NEW: Flexbox container for the header elements -->
+        <div class="flex flex-col items-center mb-6"> <!-- Added mb-6 for spacing below the header block -->
+            <h1>🔥Beastie Tracker</h1><br>
+            <div id="greeting"></div>
+            <div class="quote" id="quote">“Don't wish for it, work for it.”</div>
         </div>
-        <div class="radio-group">
-            <input name="studyType" type="radio" id="newRadio" value="New">
-            <label for="newRadio">✨ New Study</label>
-            <input name="studyType" type="radio" id="revisionRadio" value="Revision">
-            <label for="revisionRadio">🔄 Revision</label>
-            <input name="studyType" type="radio" id="practiceRadio" value="Practice">
-            <label for="practiceRadio">🧪 Practice</label>
+        <div id="clock"></div>
+
+        <!-- ... rest of your mainContent ... -->
+
+        <!-- Theme & Accent Color Settings -->
+        <div class="card w-full mb-6">
+            <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">🎨 Personalize Your Tracker</h2>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-4">
+                <button onclick="toggleDarkMode()" class="text-sm md:text-base">🌓 Toggle Light/Dark Mode</button>
+                <div class="flex flex-col items-center">
+                    <label class="text-sm mb-2 text-[var(--color-text-secondary)]">Choose Accent Color:</label>
+                    <div id="accentColorPicker"></div>
+                </div>
+            </div>
         </div>
-        <select id="mood"><option value="">Your Mood...</option><option>😌 Calm</option><option>😤 Focused</option><option>😖 Tired</option><option>🤯 Burnout</option><option>💡 Inspired</option><option>⚡ Energized</option></select>
-        <div id="moodPreview" style="font-size:1.2rem;margin-bottom:8px; text-align: center; color: #aaffea;"></div>
-        <div class="button-row">
-            <button onclick="logStudy()">✅ Log Epic Study</button>
-            <button class="clear-btn" onclick="clearHistory()">🗑️ Clear All Logs</button>
+
+        <!-- Log Study Section -->
+        <div class="card w-full">
+            <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">📝 Log Epic Study</h2>
+            <label class="text-sm text-[var(--color-text-secondary)]">Subject</label>
+            <select id="subject" class="w-full p-3 mb-4 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
+                <option value="">Select</option>
+                <option>Tamil</option><option>English</option><option>Maths</option><option>Science</option><option>Social Science</option><option>Coding</option><option>General Knowledge</option>
+            </select>
+            <label class="text-sm text-[var(--color-text-secondary)]">Time Spent (minutes)</label>
+            <input id="time" type="number" placeholder="e.g. 45" min="0" class="w-full p-3 mb-4 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
+            <label class="text-sm text-[var(--color-text-secondary)]">Notes</label>
+            <textarea id="notes" rows="2" placeholder="e.g. Chapter 2 revision; challenging topic." class="w-full p-3 mb-4 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]"></textarea>
+            
+            <label class="text-sm text-[var(--color-text-secondary)] block mb-2">Session Time:</label>
+            <div class="radio-group mb-4">
+                <input name="sessionTime" type="radio" id="morningRadio" value="Morning">
+                <label for="morningRadio">🌅 Morning</label>
+                <input name="sessionTime" type="radio" id="eveningRadio" value="Evening">
+                <label for="eveningRadio">🌃 Evening</label>
+                <input name="sessionTime" type="radio" id="afternoonRadio" value="Afternoon">
+                <label for="afternoonRadio">☀️ Afternoon</label>
+            </div>
+            
+            <label class="text-sm text-[var(--color-text-secondary)] block mb-2">Study Type:</label>
+            <div class="radio-group mb-4">
+                <input name="studyType" type="radio" id="newRadio" value="New">
+                <label for="newRadio">✨ New Study</label>
+                <input name="studyType" type="radio" id="revisionRadio" value="Revision">
+                <label for="revisionRadio">🔄 Revision</label>
+                <input name="studyType" type="radio" id="practiceRadio" value="Practice">
+                <label for="practiceRadio">🧪 Practice</label>
+            </div>
+            
+            <label class="text-sm text-[var(--color-text-secondary)]">Your Mood:</label>
+            <select id="mood" class="w-full p-3 mb-4 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
+                <option value="">Your Mood...</option><option>😌 Calm</option><option>😤 Focused</option><option>😖 Tired</option><option>🤯 Burnout</option><option>💡 Inspired</option><option>⚡ Energized</option>
+            </select>
+            <div id="moodPreview" class="text-base mb-4 text-center text-[var(--color-accent-base)]"></div>
+            <div class="button-row flex-col-gap-md md:flex-row-gap-md">
+                <button onclick="logStudy()" class="w-full md:w-auto">✅ Log Epic Study</button>
+                <button class="clear-btn w-full md:w-auto" onclick="showConfirmClearLogs()">🗑️ Clear All Logs</button>
+            </div>
         </div>
-    </div>
 
-    <div class="card">
-        <div class="stats" id="todayStats"></div>
-        <div id="streakDisplay"></div>
-        <div class="goals" id="goalContainer">
-            Daily Goal: <input id="goalInput" type="number" placeholder="Target mins today" min="0">
-            <button onclick="setGoal()">Set Goal</button>
-            <div id="goalProgress"><div id="goalFill"></div></div>
+        <!-- Pomodoro Timer Section -->
+        <div class="card w-full">
+            <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">🍅 Pomodoro Timer</h2>
+            <div id="pomodoroTimer">
+                <div id="timerDisplay">25:00</div>
+                <div id="timerControls">
+                    <button id="startTimer">Start</button>
+                    <button id="pauseTimer">Pause</button>
+                    <button id="resetTimer">Reset</button>
+                </div>
+                <div id="pomodoroSettings">
+                    Study: <input type="number" id="studyMins" value="25" min="1"> min
+                    Break: <input type="number" id="breakMins" value="5" min="1"> min
+                </div>
+            </div>
         </div>
-        <div class="calendar" id="calendar"></div>
-        <button onclick="exportLogs()">Export All Logs</button>
-    </div>
 
-    <script type="module">
-        // Supabase Imports
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+        <!-- To-Do List Section -->
+        <div class="card w-full">
+            <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">✅ Study To-Do List</h2>
+            <div id="todoListContainer">
+                <input type="text" id="todoInput" placeholder="Add a new study task..." class="w-full p-3 mb-4 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
+                <button onclick="addTodo()" class="w-full mb-4">➕ Add Task</button>
+                <div id="todosList">
+                    <!-- To-Do items will be rendered here -->
+                </div>
+            </div>
+        </div>
 
-        // !!! IMPORTANT: REPLACE THESE WITH YOUR ACTUAL SUPABASE PROJECT URL AND ANON KEY !!!
-        const SUPABASE_URL = 'https://fpqsachirakshbqcgxrt.supabase.co'; // e.g., 'https://abcdefg1234.supabase.co'
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcXNhY2hpcmFrc2hicWNneHJ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxOTcxODcsImV4cCI6MjA2ODc3MzE4N30.KL0XC3afVLPal_tk9eOjnoutp9lP5kL_ecm7oIJDjVA'; // e.g., 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+        <!-- Daily Stats & Goals Section -->
+        <div class="card w-full">
+            <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">📊 Daily Progress</h2>
+            <div class="stats text-base text-[var(--color-text-primary)] mb-4" id="todayStats"></div>
+            <div id="streakDisplay" class="flex items-center justify-center gap-2 mb-4"></div>
+            <div class="goals text-base text-[var(--color-text-primary)]">
+                <label class="text-sm text-[var(--color-text-secondary)]">Daily Goal (minutes):</label>
+                <input id="goalInput" type="number" placeholder="Target mins today" min="0" class="w-full p-3 mb-4 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
+                <button onclick="setGoal()" class="w-full mb-4">🎯 Set Goal</button>
+                <div id="goalProgress"><div id="goalFill"></div></div>
+                <p id="goalStatus" class="text-sm text-center text-[var(--color-text-secondary)] mt-2"></p>
+            </div>
+        </div>
 
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        let userId = null; // Will be set after authentication
-        let logs = [], streak = 0, goal = 0;
+        <!-- Calendar Section -->
+        <div class="card w-full">
+            <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">🗓️ Study Calendar</h2>
+            <div id="monthNav" class="flex justify-between items-center mb-4 text-[var(--color-text-primary)]">
+                <button onclick="prevMonth()" class="p-2 rounded-full bg-[var(--color-input-bg)] border border-[var(--color-input-border)] hover:bg-[var(--color-input-border)] transition-colors">◀️</button>
+                <span id="currentMonthYear" class="text-lg font-semibold"></span>
+                <button onclick="nextMonth()" class="p-2 rounded-full bg-[var(--color-input-bg)] border border-[var(--color-input-border)] hover:bg-[var(--color-input-border)] transition-colors">▶️</button>
+            </div>
+            <div id="calendarGrid" class="grid grid-cols-7 gap-2 text-center text-[var(--color-text-secondary)]">
+                <div class="font-bold">Sun</div><div class="font-bold">Mon</div><div class="font-bold">Tue</div><div class="font-bold">Wed</div><div class="font-bold">Thu</div><div class="font-bold">Fri</div><div class="font-bold">Sat</div>
+                <!-- Calendar days will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Data Visualizations Section -->
+        <div class="card w-full">
+            <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">📈 Study Insights</h2>
+            <div id="chartsContainer">
+                <div class="chart-wrapper">
+                    <h3>Daily Study Time (Last 7 Days)</h3>
+                    <canvas id="dailyStudyChart"></canvas>
+                </div>
+                <div class="chart-wrapper">
+                    <h3>Subject Breakdown (Last 30 Days)</h3>
+                    <canvas id="subjectBreakdownChart"></canvas>
+                </div>
+                 <div class="chart-wrapper">
+                    <h3>Mood Trend (Last 7 Days)</h3>
+                    <canvas id="moodTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gamification Section -->
+        <div class="card w-full" id="gamificationSection">
+            <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">🏆 Beastie Achievements</h2>
+            <div id="levelDisplay">Level: 1 (0 XP)</div>
+            <div id="xpProgress"><div id="xpFill"></div></div>
+            <p id="xpText" class="text-sm text-[var(--color-text-secondary)] mb-4">Next Level: 100 XP</p>
+            <div id="achievementsGrid">
+                <!-- Achievement badges will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Filter & Export Logs Section -->
+        <div class="card w-full">
+            <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">🔍 Filter & Export Logs</h2>
+            <div id="filterSearchContainer">
+                <input type="text" id="logSearchInput" placeholder="Search notes..." onkeyup="filterLogs()" class="w-full p-3 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
+                <select id="logFilterSubject" onchange="filterLogs()" class="w-full p-3 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
+                    <option value="">All Subjects</option>
+                    <option>Tamil</option><option>English</option><option>Maths</option><option>Science</option><option>Social Science</option><option>Coding</option><option>General Knowledge</option>
+                </select>
+                <input type="date" id="logFilterDateStart" onchange="filterLogs()" class="w-full p-3 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
+                <input type="date" id="logFilterDateEnd" onchange="filterLogs()" class="w-full p-3 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
+            </div>
+            <div class="button-row flex-col-gap-md md:flex-row-gap-md mt-6">
+                 <button onclick="exportLogs()" class="w-full md:w-auto">⬇️ Export All Logs</button>
+            </div>
+            <div id="logListContainer" class="mt-6">
+                <!-- Filtered logs will be displayed here -->
+            </div>
+        </div>
+
+    </div> <!-- End mainContent -->
+
+    <script>
+        // Global state variables
+        let logs = [];
+        let goal = 0;
+        let currentTheme = 'dark'; // Default theme
+        let currentAccentColor = '#00cfff'; // Default accent color (Cyan)
+        let currentAccentColorRGB = '0, 207, 255'; // Default RGB for Cyan
+
+        // Pomodoro Timer variables
+        let pomodoroTimerInterval;
+        let pomodoroTimeLeft; // in seconds
+        let pomodoroIsRunning = false;
+        let pomodoroCurrentMode = 'study'; // 'study' or 'break'
+        let studyDuration = 25 * 60; // Default 25 minutes in seconds
+        let breakDuration = 5 * 60;  // Default 5 minutes in seconds
+
+        // To-Do List variables
+        let todos = [];
+
+        // Gamification variables
+        let userXP = 0;
+        let userLevel = 1;
+        const XP_PER_LEVEL = 100; // XP needed to level up
+        const XP_PER_MINUTE = 1; // XP gained per minute of study
 
         // Fixed password for the tracker
         const FIXED_PASSWORD = "beastie123";
 
+        // Quotes for dynamic display
         const quotes = [
             "Champions are built in silence.",
             "Focus. Grind. Repeat.",
@@ -554,6 +1039,80 @@
             "Success is the sum of small efforts, repeated day in and day out.",
             "Don't wish for it, work for it."
         ];
+
+        // Material You inspired accent colors
+        const accentColors = {
+            'Cyan': { hex: '#00cfff', rgb: '0, 207, 255' },
+            'Purple': { hex: '#8e2de2', rgb: '142, 45, 226' },
+            'Green': { hex: '#4CAF50', rgb: '76, 175, 80' },
+            'Orange': { hex: '#FF9800', rgb: '255, 152, 0' },
+            'Pink': { hex: '#E91E63', rgb: '233, 30, 99' }
+        };
+
+        // Achievements definitions
+        const achievements = [
+            { id: 'first_log', name: 'First Log', icon: '✨', description: 'Logged your first study session.', earned: false, check: () => logs.length >= 1 },
+            { id: '7_day_streak', name: '7-Day Streak', icon: '🔥', description: 'Achieved a 7-day study streak.', earned: false, check: () => calculateStreak() >= 7 },
+            { id: 'goal_achiever', name: 'Goal Achiever', icon: '🎯', description: 'Completed a daily goal.', earned: false, check: () => {
+                const today = new Date().toLocaleDateString();
+                const todayLogs = logs.filter(l => l.date === today);
+                const total = todayLogs.reduce((a, b) => a + b.time, 0);
+                return goal > 0 && total >= goal;
+            }},
+            { id: '100_minutes', name: '100 Min Master', icon: '💯', description: 'Logged 100+ minutes in a single day.', earned: false, check: () => {
+                const today = new Date().toLocaleDateString();
+                const todayLogs = logs.filter(l => l.date === today);
+                const total = todayLogs.reduce((a, b) => a + b.time, 0);
+                return total >= 100;
+            }},
+            { id: '5_subjects', name: 'Diverse Learner', icon: '📚', description: 'Studied 5 different subjects.', earned: false, check: () => {
+                const uniqueSubjects = new Set(logs.map(l => l.subj));
+                return uniqueSubjects.size >= 5;
+            }},
+            { id: 'lvl_5', name: 'Level 5 Beast', icon: '🦁', description: 'Reached Level 5.', earned: false, check: () => userLevel >= 5 },
+        ];
+
+
+        // --- Utility Functions ---
+        function showMessage(message, type = 'info', duration = 3000) {
+            const msgBox = document.getElementById('messageBox');
+            msgBox.textContent = message;
+            msgBox.className = 'text-sm'; // Reset classes
+            msgBox.classList.add('show');
+            if (type === 'error') msgBox.classList.add('error');
+            if (type === 'success') msgBox.classList.add('success');
+
+            setTimeout(() => {
+                msgBox.classList.remove('show');
+            }, duration);
+        }
+
+        function showConfirm(message, onConfirm) {
+            const modalOverlay = document.getElementById('confirmModalOverlay');
+            const confirmMessage = document.getElementById('confirmMessage');
+            confirmMessage.textContent = message;
+
+            modalOverlay.classList.add('show');
+
+            const confirmYes = document.getElementById('confirmYes');
+            const confirmNo = document.getElementById('confirmNo');
+
+            // Remove existing listeners to prevent multiple calls
+            const newConfirmYes = confirmYes.cloneNode(true);
+            confirmYes.parentNode.replaceChild(newConfirmYes, confirmYes);
+            const newConfirmNo = confirmNo.cloneNode(true);
+            confirmNo.parentNode.replaceChild(newConfirmNo, confirmNo);
+
+            newConfirmYes.addEventListener('click', () => {
+                onConfirm(true);
+                modalOverlay.classList.remove('show');
+            });
+
+            newConfirmNo.addEventListener('click', () => {
+                onConfirm(false);
+                modalOverlay.classList.remove('show');
+            });
+        }
 
         // --- Core UI & Dynamic Content ---
         function rotateQuote() {
@@ -582,60 +1141,120 @@
             document.getElementById("moodPreview").textContent = "Mood: " + e.target.value;
         });
 
-        // --- Supabase Authentication ---
-        async function signInAnonymouslySupabase() {
-            try {
-                const { data, error } = await supabase.auth.signInAnonymously();
-                if (error) throw error;
-                userId = data.user.id;
-                document.getElementById('userIdDisplay').textContent = `User ID: ${userId}`; // Display full ID
-                console.log("Supabase authenticated with user ID:", userId);
-                await loadInitialData(); // Load data once authenticated
-            } catch (error) {
-                console.error("Error signing in anonymously with Supabase:", error.message);
-                alert("Error signing in. Please check console for details.");
-                // Fallback to local storage if Supabase auth fails
-                userId = crypto.randomUUID(); // Generate a random ID for local-only operation
-                document.getElementById('userIdDisplay').textContent = `User ID (Local): ${userId}`;
-                console.warn("Could not authenticate with Supabase, using local-only user ID.");
-                loadInitialDataFromLocalStorage(); // Load from local storage
+        // --- Theme & Accent Color ---
+        function toggleDarkMode() {
+            if (currentTheme === 'dark') {
+                document.body.classList.add('light-mode');
+                currentTheme = 'light';
+            } else {
+                document.body.classList.remove('light-mode');
+                currentTheme = 'dark';
+            }
+            localStorage.setItem('beastieTheme', currentTheme);
+            updateChartColors(); // Update chart colors on theme change
+        }
+
+        // Function to convert hex to RGB string
+        function hexToRgb(hex) {
+            const bigint = parseInt(hex.slice(1), 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+            return `${r}, ${g}, ${b}`;
+        }
+
+        function applyAccentColor(colorName) {
+            const colorData = accentColors[colorName];
+            if (colorData) {
+                document.documentElement.style.setProperty('--color-primary', colorData.hex);
+                document.documentElement.style.setProperty('--color-primary-rgb', colorData.rgb);
+                
+                // Dynamically calculate secondary/tertiary shades for a more cohesive Material You feel
+                document.documentElement.style.setProperty('--color-secondary', adjustColor(colorData.hex, -20)); // Darken by 20%
+                document.documentElement.style.setProperty('--color-tertiary', adjustColor(colorData.hex, 20)); // Lighten by 20%
+                document.documentElement.style.setProperty('--color-accent-base', colorData.hex);
+                document.documentElement.style.setProperty('--color-accent-base-rgb', colorData.rgb);
+
+                currentAccentColor = colorData.hex;
+                currentAccentColorRGB = colorData.rgb;
+                localStorage.setItem('beastieAccentColor', colorName);
+                drawAccentColorPicker(); // Re-draw to show selected
+                updateChartColors(); // Update chart colors
             }
         }
 
-        // --- Data Logging & Persistence (Supabase) ---
-        async function logStudy() {
-            if (!userId) {
-                alert("❗ App is not ready. Please wait for authentication.");
-                return;
-            }
+        // Helper to adjust color brightness (simple version)
+        function adjustColor(hex, percent) {
+            let f = parseInt(hex.slice(1), 16), t = percent < 0 ? 0 : 255, p = percent < 0 ? percent * -1 : percent, R = f >> 16, G = (f >> 8) & 0x00ff, B = f & 0x0000ff;
+            return "#" + (0x1000000 + (Math.round((t - R) * p) + R) * 0x10000 + (Math.round((t - G) * p) + G) * 0x100 + (Math.round((t - B) * p) + B)).toString(16).slice(1);
+        }
 
+        function drawAccentColorPicker() {
+            const pickerContainer = document.getElementById('accentColorPicker');
+            pickerContainer.innerHTML = '';
+            for (const name in accentColors) {
+                const swatch = document.createElement('div');
+                swatch.className = 'color-swatch';
+                swatch.style.backgroundColor = accentColors[name].hex;
+                swatch.title = name;
+                swatch.onclick = () => applyAccentColor(name);
+                if (accentColors[name].hex === currentAccentColor) {
+                    swatch.classList.add('selected');
+                }
+                pickerContainer.appendChild(swatch);
+            }
+        }
+
+        // --- Data Persistence (LocalStorage) ---
+        function saveToLocalStorage(key, data) {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+            } catch (e) {
+                console.error(`Error saving ${key} to localStorage:`, e);
+                showMessage(`Error saving data (${key}). Storage might be full.`, 'error');
+            }
+        }
+
+        function loadFromLocalStorage(key, defaultValue) {
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : defaultValue;
+            } catch (e) {
+                console.error(`Error loading ${key} from localStorage:`, e);
+                showMessage(`Error loading data (${key}). Using default.`, 'error');
+                return defaultValue;
+            }
+        }
+
+        // --- Study Logging ---
+        function logStudy() {
             const s = document.getElementById("subject").value;
             const t = parseInt(document.getElementById("time").value);
             const note = document.getElementById("notes").value.trim();
             const session = document.querySelector('input[name="sessionTime"]:checked')?.value;
-            const type = document.querySelector('input[name="studyType"]:checked')?.value;
+            const kind = document.querySelector('input[name="studyType"]:checked')?.value; // Changed to 'kind' for consistency with previous
             const mood = document.getElementById("mood").value;
 
-            if (!s || isNaN(t) || t <= 0 || !session || !type) {
-                alert("❗ Please ensure Subject, Time, Session, and Study Type are all filled in correctly.");
+            if (!s || isNaN(t) || t <= 0 || !session || !kind) {
+                showMessage("❗ Please ensure Subject, Time, Session, and Study Type are all filled in correctly.", 'error');
                 return;
             }
 
             const d = new Date().toLocaleDateString();
             const timestamp = Date.now(); // Add a timestamp for consistent ordering
 
-            try {
-                const { data, error } = await supabase
-                    .from('study_logs') // Your table name
-                    .insert([
-                        { user_id: userId, date: d, subj: s, time: t, session, kind, note, mood, timestamp }
-                    ]);
-                if (error) throw error;
-                console.log("Study log added to Supabase:", data);
-            } catch (e) {
-                console.error("Error adding document to Supabase: ", e.message);
-                alert("Error logging study. Please try again.");
-            }
+            logs.unshift({ date: d, subj: s, time: t, session, kind, note, mood, timestamp });
+            saveToLocalStorage('beastieLogs', logs); // Save to localStorage
+
+            // Update XP and check for level up
+            userXP += (t * XP_PER_MINUTE);
+            checkLevelUp();
+            saveToLocalStorage('beastieXP', userXP);
+            saveToLocalStorage('beastieLevel', userLevel);
+
+            checkAchievements(); // Check for new achievements
+            updateAll(); // Refresh all UI elements
+            showMessage("✅ Epic Study Logged!", 'success');
             
             // Clear inputs after logging
             document.getElementById("subject").selectedIndex = 0;
@@ -647,25 +1266,25 @@
             document.getElementById("moodPreview").textContent = "";
         }
 
-        async function clearHistory() {
-            if (!userId) {
-                alert("❗ App is not ready. Please wait for authentication.");
-                return;
-            }
-
-            if (confirm("🚨 Are you sure you want to clear ALL study logs? This cannot be undone!")) {
-                try {
-                    const { error } = await supabase
-                        .from('study_logs')
-                        .delete()
-                        .eq('user_id', userId); // Ensure only current user's logs are deleted
-                    if (error) throw error;
-                    console.log("All study logs cleared from Supabase.");
-                } catch (e) {
-                    console.error("Error clearing documents from Supabase: ", e.message);
-                    alert("Error clearing logs. Please try again.");
+        function showConfirmClearLogs() {
+            showConfirm("🚨 Are you sure you want to clear ALL study logs? This cannot be undone!", (confirmed) => {
+                if (confirmed) {
+                    clearHistory();
                 }
-            }
+            });
+        }
+
+        function clearHistory() {
+            logs = [];
+            localStorage.removeItem('beastieLogs'); // Clear from localStorage
+            userXP = 0; // Reset XP
+            userLevel = 1; // Reset Level
+            achievements.forEach(a => a.earned = false); // Reset achievements
+            saveToLocalStorage('beastieXP', userXP);
+            saveToLocalStorage('beastieLevel', userLevel);
+            saveToLocalStorage('beastieAchievements', achievements);
+            updateAll();
+            showMessage("🗑️ All logs cleared!", 'success');
         }
 
         // --- Data Analysis & Display ---
@@ -676,55 +1295,52 @@
             const bySub = {};
             todayLogs.forEach(l => bySub[l.subj] = (bySub[l.subj] || 0) + l.time);
 
-            let txt = `⚡ Today's Beast Mode: **${total} minutes**`;
+            let txt = `⚡ Today's Beast Mode: <strong>${total} minutes</strong>`;
             for (let s in bySub) txt += ` • ${s}: ${bySub[s]} min`;
             
             document.getElementById("todayStats").innerHTML = txt; // Use innerHTML for bold
         }
 
-        function updateStreak() {
-            // Ensure logs are sorted by date for accurate streak calculation
+        function calculateStreak() {
             const sortedLogs = [...logs].sort((a, b) => new Date(a.date) - new Date(b.date));
-            const dates = [...new Set(sortedLogs.map(l => l.date))]; // Unique dates from sorted logs
+            const uniqueDates = [...new Set(sortedLogs.map(l => new Date(l.date).toLocaleDateString()))];
 
             let currentStreak = 0;
-            let lastDate = new Date(); // Start from "today"
+            let lastDate = new Date();
             lastDate.setHours(0,0,0,0); // Normalize to start of day
 
             // Check if today has logs. If not, and yesterday has logs, start streak check from yesterday.
-            const todayHasLogs = dates.some(d => new Date(d).setHours(0,0,0,0) === lastDate.getTime());
-            if (!todayHasLogs && dates.length > 0) {
-                const latestLogDate = new Date(dates[dates.length - 1]);
+            const todayHasLogs = uniqueDates.includes(lastDate.toLocaleDateString());
+            if (!todayHasLogs && uniqueDates.length > 0) {
+                const latestLogDate = new Date(uniqueDates[uniqueDates.length - 1]);
                 latestLogDate.setHours(0,0,0,0);
                 const yesterday = new Date(lastDate);
                 yesterday.setDate(lastDate.getDate() - 1);
                 if (latestLogDate.getTime() === yesterday.getTime()) {
                     lastDate.setDate(lastDate.getDate() - 1); // Adjust lastDate to yesterday to start streak
                 } else if (latestLogDate.getTime() < yesterday.getTime()) {
-                    // If the latest log is older than yesterday, streak is 0
-                    currentStreak = 0;
-                    streak = currentStreak;
-                    drawStreakVisual();
-                    return;
+                    return 0; // If the latest log is older than yesterday, streak is 0
                 }
             }
 
-            for (let i = dates.length - 1; i >= 0; i--) {
-                const logDate = new Date(dates[i]);
+            for (let i = uniqueDates.length - 1; i >= 0; i--) {
+                const logDate = new Date(uniqueDates[i]);
                 logDate.setHours(0,0,0,0); // Normalize log date
 
                 if (logDate.getTime() === lastDate.getTime()) {
                     currentStreak++;
                     lastDate.setDate(lastDate.getDate() - 1); // Move to previous day
                 } else if (logDate.getTime() < lastDate.getTime()) {
-                    // If there's a gap, break the streak
-                    break;
+                    break; // If there's a gap, break the streak
                 }
             }
-            streak = currentStreak;
-            drawStreakVisual();
+            return currentStreak;
         }
 
+        function updateStreak() {
+            streak = calculateStreak();
+            drawStreakVisual();
+        }
 
         function drawStreakVisual() {
             const streakDisplay = document.getElementById("streakDisplay");
@@ -735,9 +1351,7 @@
             if (streak > 0) {
                 const prefix = document.createElement('span');
                 prefix.textContent = `🔥 Streak: ${streak} days `;
-                prefix.style.marginRight = '5px';
-                prefix.style.fontWeight = '600';
-                prefix.style.color = '#fff'; /* Ensure streak text is white */
+                prefix.classList.add('font-semibold', 'text-[var(--color-text-primary)]');
                 streakDisplay.appendChild(prefix);
 
                 for (let i = 0; i < maxDots; i++) {
@@ -749,51 +1363,15 @@
                     streakDisplay.appendChild(dot);
                 }
             } else {
-                    streakDisplay.innerHTML = `<span style="opacity:0.8; font-style:italic; color: #E0E0E0;">No active streak. Log some study!</span>`;
+                streakDisplay.innerHTML = `<span class="opacity-80 italic text-[var(--color-text-secondary)]">No active streak. Log some study!</span>`;
             }
         }
 
-        async function setGoal() {
-            if (!userId) {
-                alert("❗ App is not ready. Please wait for authentication.");
-                return;
-            }
+        function setGoal() {
             goal = parseInt(document.getElementById("goalInput").value) || 0;
-
-            try {
-                // Check if a goal already exists for this user
-                const { data: existingGoal, error: fetchError } = await supabase
-                    .from('settings') // Assuming you create a 'settings' table for goals
-                    .select('id')
-                    .eq('user_id', userId)
-                    .eq('type', 'dailyGoal')
-                    .single(); // Use single to get one record
-
-                if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 means no rows found
-                    throw fetchError;
-                }
-
-                if (existingGoal) {
-                    // Update existing goal
-                    const { error: updateError } = await supabase
-                        .from('settings')
-                        .update({ value: goal, updated_at: new Date().toISOString() }) // Add updated_at if you have it
-                        .eq('id', existingGoal.id);
-                    if (updateError) throw updateError;
-                    console.log("Daily goal updated in Supabase.");
-                } else {
-                    // Insert new goal
-                    const { error: insertError } = await supabase
-                        .from('settings')
-                        .insert([{ user_id: userId, type: "dailyGoal", value: goal, created_at: new Date().toISOString() }]);
-                    if (insertError) throw insertError;
-                    console.log("Daily goal set in Supabase.");
-                }
-            } catch (e) {
-                console.error("Error setting goal in Supabase: ", e.message);
-                alert("Error setting goal. Please try again.");
-            }
+            saveToLocalStorage('beastieGoal', goal); // Save to localStorage
             updateGoal(); // Update UI immediately
+            showMessage(`🎯 Daily goal set to ${goal} minutes!`, 'success');
         }
 
         function updateGoal() {
@@ -815,199 +1393,624 @@
             if (!goalStatus) {
                 goalStatus = document.createElement('p');
                 goalStatus.id = "goalStatus";
-                goalStatus.style.marginTop = '8px';
-                goalStatus.style.textAlign = 'center';
-                goalStatus.style.color = '#B2EBF2'; /* Light cyan for status */
+                goalStatus.classList.add('mt-2', 'text-center', 'text-sm', 'text-[var(--color-text-secondary)]');
                 goalContainer.appendChild(goalStatus);
             }
             if (goal > 0) {
                 goalStatus.textContent = `${tot} / ${goal} minutes - ${percentage.toFixed(0)}%`;
                 if (percentage >= 100) {
-                    goalStatus.innerHTML += ' 🎉 *Goal Achieved!*';
+                    goalStatus.innerHTML += ' 🎉 <i>Goal Achieved!</i>';
                 }
             } else {
                 goalStatus.textContent = 'Set a daily goal above!';
             }
         }
 
+        // --- Calendar ---
+        let currentCalendarDate = new Date();
 
         function drawCalendar() {
-            const cal = document.getElementById("calendar");
-            cal.innerHTML = ""; // Clear previous calendar
-            for (let i = 6; i >= 0; i--) { // Last 7 days
-                const d = new Date();
-                d.setDate(d.getDate() - i);
+            const calGrid = document.getElementById("calendarGrid");
+            calGrid.innerHTML = `
+                <div class="font-bold text-[var(--color-text-primary)]">Sun</div>
+                <div class="font-bold text-[var(--color-text-primary)]">Mon</div>
+                <div class="font-bold text-[var(--color-text-primary)]">Tue</div>
+                <div class="font-bold text-[var(--color-text-primary)]">Wed</div>
+                <div class="font-bold text-[var(--color-text-primary)]">Thu</div>
+                <div class="font-bold text-[var(--color-text-primary)]">Fri</div>
+                <div class="font-bold text-[var(--color-text-primary)]">Sat</div>
+            `; // Clear and add day names
+
+            document.getElementById("currentMonthYear").textContent = currentCalendarDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+            const firstDayOfMonth = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), 1);
+            const lastDayOfMonth = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth() + 1, 0);
+            const numDaysInMonth = lastDayOfMonth.getDate();
+            const firstDayOfWeek = firstDayOfMonth.getDay(); // 0 for Sunday, 1 for Monday, etc.
+
+            // Add empty divs for leading blank days
+            for (let i = 0; i < firstDayOfWeek; i++) {
+                const emptyDiv = document.createElement("div");
+                calGrid.appendChild(emptyDiv);
+            }
+
+            const todayFullDate = new Date().toLocaleDateString();
+            const logsByDate = logs.reduce((acc, log) => {
+                acc[log.date] = acc[log.date] || [];
+                acc[log.date].push(log);
+                return acc;
+            }, {});
+
+            for (let day = 1; day <= numDaysInMonth; day++) {
+                const d = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), day);
                 const div = document.createElement("div");
-                div.textContent = d.getDate();
-                if (d.toLocaleDateString() === new Date().toLocaleDateString()) {
+                div.textContent = day;
+                div.classList.add('p-2', 'rounded-lg', 'cursor-pointer', 'transition-all', 'duration-300', 'ease-in-out', 'hover:scale-105', 'hover:shadow-lg', 'bg-[var(--color-input-bg)]', 'text-[var(--color-text-primary)]', 'border', 'border-[var(--color-input-border)]');
+
+                const dateString = d.toLocaleDateString();
+                if (dateString === todayFullDate) {
                     div.classList.add("today");
                 }
+
+                const dayLogs = logsByDate[dateString];
+                if (dayLogs && dayLogs.length > 0) {
+                    div.classList.add('has-study');
+                    const totalStudyForDay = dayLogs.reduce((sum, log) => sum + log.time, 0);
+                    if (goal > 0 && totalStudyForDay >= goal) {
+                        div.classList.add('goal-achieved');
+                    }
+                }
+
                 div.onclick = () => {
-                    const dateString = d.toLocaleDateString();
-                    const list = logs.filter(l => l.date === dateString)
+                    const list = (dayLogs || [])
                         .map(l => `Subject: ${l.subj}\nTime: ${l.time}min\nSession: ${l.session}\nType: ${l.kind}${l.mood ? `\nMood: ${l.mood}` : ""}${l.note ? `\nNotes: ${l.note}` : ""}`)
                         .join("\n\n") || "No logs for this day.";
-                    alert(`Logs for ${dateString}:\n\n${list}`);
+                    showMessage(`Logs for ${dateString}:\n\n${list}`, 'info', 5000); // Use custom message box
                 };
-                cal.appendChild(div);
+                calGrid.appendChild(div);
             }
         }
 
-        async function exportLogs() {
-            if (!userId) {
-                alert("❗ App is not ready. Please wait for authentication.");
-                return;
-            }
-            try {
-                const { data, error } = await supabase
-                    .from('study_logs')
-                    .select('*')
-                    .eq('user_id', userId)
-                    .order('timestamp', { ascending: false }); // Order by timestamp for consistent export
-                if (error) throw error;
-
-                const allLogs = data;
-
-                const a = document.createElement("a");
-                a.href = URL.createObjectURL(new Blob([JSON.stringify(allLogs, null, 2)], { type: "application/json" })); // Pretty print JSON
-                a.download = "beastie_logs.json";
-                a.click();
-                alert("Logs exported as beastie_logs.json!");
-            } catch (e) {
-                console.error("Error exporting logs from Supabase: ", e.message);
-                alert("Error exporting logs. Please try again.");
-            }
-        }
-
-        function updateAll() {
-            updateStreak(); // Update streak and its visual
-            updateStats();
-            updateGoal();
+        function prevMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
             drawCalendar();
         }
 
-        // --- Initial Load & Data Fetch (Supabase & LocalStorage Fallback) ---
-        async function loadInitialData() {
-            if (!userId) {
-                console.warn("User ID not available, cannot load data from Supabase.");
-                loadInitialDataFromLocalStorage(); // Fallback to localStorage
+        function nextMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            drawCalendar();
+        }
+
+        // --- Export Logs ---
+        function exportLogs() {
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(new Blob([JSON.stringify(logs, null, 2)], { type: "application/json" })); // Pretty print JSON
+            a.download = "beastie_logs.json";
+            a.click();
+            showMessage("Logs exported as beastie_logs.json!", 'success');
+        }
+
+        // --- Pomodoro Timer Functions ---
+        function updateTimerDisplay() {
+            const minutes = Math.floor(pomodoroTimeLeft / 60);
+            const seconds = pomodoroTimeLeft % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (pomodoroIsRunning) return;
+            pomodoroIsRunning = true;
+            document.getElementById('startTimer').textContent = 'Resume'; // Change button text
+            showMessage(`Pomodoro ${pomodoroCurrentMode} started!`, 'info');
+
+            pomodoroTimerInterval = setInterval(() => {
+                pomodoroTimeLeft--;
+                updateTimerDisplay();
+
+                if (pomodoroTimeLeft <= 0) {
+                    clearInterval(pomodoroTimerInterval);
+                    pomodoroIsRunning = false;
+                    
+                    if (pomodoroCurrentMode === 'study') {
+                        // Log the study session automatically
+                        const d = new Date().toLocaleDateString();
+                        const timestamp = Date.now();
+                        logs.unshift({
+                            date: d,
+                            subj: 'Pomodoro Session',
+                            time: studyDuration / 60, // Log actual study minutes
+                            session: 'Pomodoro',
+                            kind: 'Focused Study',
+                            note: `Completed a ${studyDuration / 60}-minute Pomodoro session.`,
+                            mood: 'Focused', // Default mood for auto-logged sessions
+                            timestamp: timestamp
+                        });
+                        saveToLocalStorage('beastieLogs', logs);
+                        userXP += (studyDuration / 60 * XP_PER_MINUTE);
+                        checkLevelUp();
+                        saveToLocalStorage('beastieXP', userXP);
+                        saveToLocalStorage('beastieLevel', userLevel);
+                        checkAchievements();
+                        updateAll();
+                        showMessage(`🎉 Pomodoro Study Session Complete! Took a ${studyDuration / 60} min session.`, 'success', 5000);
+                        pomodoroCurrentMode = 'break';
+                        pomodoroTimeLeft = breakDuration;
+                        showMessage(`Time for a ${breakDuration / 60}-minute break!`, 'info', 3000);
+                    } else {
+                        pomodoroCurrentMode = 'study';
+                        pomodoroTimeLeft = studyDuration;
+                        showMessage('Break finished! Ready for next study session.', 'info', 3000);
+                    }
+                    updateTimerDisplay();
+                    document.getElementById('startTimer').textContent = 'Start'; // Reset button text
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            clearInterval(pomodoroTimerInterval);
+            pomodoroIsRunning = false;
+            document.getElementById('startTimer').textContent = 'Resume';
+            showMessage('Timer paused.', 'info');
+        }
+
+        function resetTimer() {
+            clearInterval(pomodoroTimerInterval);
+            pomodoroIsRunning = false;
+            pomodoroCurrentMode = 'study';
+            studyDuration = parseInt(document.getElementById('studyMins').value) * 60 || (25 * 60);
+            breakDuration = parseInt(document.getElementById('breakMins').value) * 60 || (5 * 60);
+            pomodoroTimeLeft = studyDuration;
+            updateTimerDisplay();
+            document.getElementById('startTimer').textContent = 'Start';
+            showMessage('Timer reset.', 'info');
+            saveToLocalStorage('pomodoroSettings', { study: studyDuration / 60, break: breakDuration / 60 });
+        }
+
+        // Load Pomodoro settings from localStorage
+        function loadPomodoroSettings() {
+            const savedSettings = loadFromLocalStorage('pomodoroSettings', { study: 25, break: 5 });
+            document.getElementById('studyMins').value = savedSettings.study;
+            document.getElementById('breakMins').value = savedSettings.break;
+            studyDuration = savedSettings.study * 60;
+            breakDuration = savedSettings.break * 60;
+            pomodoroTimeLeft = studyDuration;
+            updateTimerDisplay();
+        }
+
+        // --- To-Do List Functions ---
+        function addTodo() {
+            const todoInput = document.getElementById('todoInput');
+            const taskText = todoInput.value.trim();
+            if (taskText) {
+                todos.push({ id: Date.now(), text: taskText, completed: false });
+                saveToLocalStorage('beastieTodos', todos);
+                renderTodos();
+                todoInput.value = '';
+                showMessage('Task added!', 'success');
+            } else {
+                showMessage('Please enter a task.', 'error');
+            }
+        }
+
+        function toggleTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                todo.completed = !todo.completed;
+                saveToLocalStorage('beastieTodos', todos);
+                renderTodos();
+                showMessage(`Task ${todo.completed ? 'completed' : 'reopened'}!`, 'info');
+            }
+        }
+
+        function deleteTodo(id) {
+            showConfirm("Are you sure you want to delete this task?", (confirmed) => {
+                if (confirmed) {
+                    todos = todos.filter(t => t.id !== id);
+                    saveToLocalStorage('beastieTodos', todos);
+                    renderTodos();
+                    showMessage('Task deleted!', 'success');
+                }
+            });
+        }
+
+        function renderTodos() {
+            const todosList = document.getElementById('todosList');
+            todosList.innerHTML = '';
+            if (todos.length === 0) {
+                todosList.innerHTML = '<p class="text-center text-[var(--color-text-secondary)] italic">No tasks yet. Add some!</p>';
                 return;
             }
+            todos.forEach(todo => {
+                const todoItem = document.createElement('div');
+                todoItem.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+                todoItem.innerHTML = `
+                    <input type="checkbox" ${todo.completed ? 'checked' : ''} onchange="toggleTodo(${todo.id})">
+                    <span>${todo.text}</span>
+                    <button onclick="deleteTodo(${todo.id})">✖️</button>
+                `;
+                todosList.appendChild(todoItem);
+            });
+        }
 
-            // Listen for real-time updates to study logs
-            supabase
-                .from('study_logs')
-                .on('INSERT', payload => {
-                    // Add new log to the beginning of the array and sort
-                    logs.unshift(payload.new);
-                    logs.sort((a, b) => b.timestamp - a.timestamp);
-                    updateAll();
-                    console.log('Realtime INSERT:', payload.new);
-                })
-                .on('UPDATE', payload => {
-                    // Find and update the log
-                    const index = logs.findIndex(log => log.id === payload.new.id);
-                    if (index !== -1) {
-                        logs[index] = payload.new;
-                        logs.sort((a, b) => b.timestamp - a.timestamp);
-                        updateAll();
-                        console.log('Realtime UPDATE:', payload.new);
+        // --- Charting Functions (Chart.js) ---
+        let dailyStudyChartInstance, subjectBreakdownChartInstance, moodTrendChartInstance;
+
+        function updateChartColors() {
+            const chartFontColor = getComputedStyle(document.documentElement).getPropertyValue('--color-text-primary');
+            const chartGridColor = getComputedStyle(document.documentElement).getPropertyValue('--color-input-border');
+            const chartAccentColor = getComputedStyle(document.documentElement).getPropertyValue('--color-accent-base');
+            const chartAccentColorRGB = getComputedStyle(document.documentElement).getPropertyValue('--color-accent-base-rgb');
+
+            if (dailyStudyChartInstance) {
+                dailyStudyChartInstance.options.scales.x.ticks.color = chartFontColor;
+                dailyStudyChartInstance.options.scales.y.ticks.color = chartFontColor;
+                dailyStudyChartInstance.options.scales.x.grid.color = chartGridColor;
+                dailyStudyChartInstance.options.scales.y.grid.color = chartGridColor;
+                dailyStudyChartInstance.data.datasets[0].borderColor = chartAccentColor;
+                dailyStudyChartInstance.data.datasets[0].backgroundColor = `rgba(${chartAccentColorRGB}, 0.3)`;
+                dailyStudyChartInstance.update();
+            }
+            if (subjectBreakdownChartInstance) {
+                subjectBreakdownChartInstance.options.plugins.legend.labels.color = chartFontColor;
+                subjectBreakdownChartInstance.update();
+            }
+             if (moodTrendChartInstance) {
+                moodTrendChartInstance.options.scales.x.ticks.color = chartFontColor;
+                moodTrendChartInstance.options.scales.y.ticks.color = chartFontColor;
+                moodTrendChartInstance.options.scales.x.grid.color = chartGridColor;
+                moodTrendChartInstance.options.scales.y.grid.color = chartGridColor;
+                moodTrendChartInstance.data.datasets[0].borderColor = chartAccentColor;
+                moodTrendChartInstance.data.datasets[0].backgroundColor = `rgba(${chartAccentColorRGB}, 0.3)`;
+                moodTrendChartInstance.update();
+            }
+        }
+
+        function renderCharts() {
+            // Daily Study Chart (Last 7 Days)
+            const dailyCtx = document.getElementById('dailyStudyChart').getContext('2d');
+            const last7Days = Array.from({ length: 7 }, (_, i) => {
+                const d = new Date();
+                d.setDate(d.getDate() - (6 - i)); // Get last 7 days including today
+                return d.toLocaleDateString();
+            });
+            const dailyData = last7Days.map(date => {
+                return logs.filter(l => l.date === date).reduce((sum, l) => sum + l.time, 0);
+            });
+
+            if (dailyStudyChartInstance) dailyStudyChartInstance.destroy();
+            dailyStudyChartInstance = new Chart(dailyCtx, {
+                type: 'line',
+                data: {
+                    labels: last7Days.map(d => new Date(d).getDate()), // Show just day number
+                    datasets: [{
+                        label: 'Minutes Studied',
+                        data: dailyData,
+                        borderColor: currentAccentColor,
+                        backgroundColor: `rgba(${currentAccentColorRGB}, 0.3)`,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: {
+                            grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--color-input-border') },
+                            ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-primary') }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--color-input-border') },
+                            ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-primary') }
+                        }
                     }
-                })
-                .on('DELETE', payload => {
-                    // Remove deleted log
-                    logs = logs.filter(log => log.id !== payload.old.id);
-                    updateAll();
-                    console.log('Realtime DELETE:', payload.old);
-                })
-                .subscribe();
-
-            // Initial fetch of all logs
-            try {
-                const { data, error } = await supabase
-                    .from('study_logs')
-                    .select('*')
-                    .eq('user_id', userId) // Fetch only logs for the current user
-                    .order('timestamp', { ascending: false }); // Sort by timestamp
-                if (error) throw error;
-                logs = data;
-                updateAll();
-                console.log("Initial logs loaded from Supabase.");
-            } catch (e) {
-                console.error("Error loading initial logs from Supabase:", e.message);
-                alert("Error loading logs. Falling back to local storage.");
-                loadInitialDataFromLocalStorage();
-            }
-
-            // Load Goal (assuming a 'settings' table with 'type' and 'value' columns)
-            try {
-                const { data, error } = await supabase
-                    .from('settings') // Assuming a 'settings' table
-                    .select('value')
-                    .eq('user_id', userId)
-                    .eq('type', 'dailyGoal')
-                    .single(); // Use single to get one record
-                if (error && error.code !== 'PGRST116') { // PGRST116 means no rows found
-                    throw error;
                 }
-                goal = data ? data.value : 0;
-                document.getElementById('goalInput').value = goal;
-                updateGoal();
-                console.log("Goal loaded from Supabase:", goal);
-            } catch (e) {
-                console.error("Error loading goal from Supabase:", e.message);
-                goal = 0;
-                document.getElementById('goalInput').value = 0;
-                updateGoal();
-            }
+            });
+
+            // Subject Breakdown Chart (Last 30 Days)
+            const subjectCtx = document.getElementById('subjectBreakdownChart').getContext('2d');
+            const last30DaysLogs = logs.filter(l => (Date.now() - new Date(l.timestamp)) < (30 * 24 * 60 * 60 * 1000));
+            const subjectData = last30DaysLogs.reduce((acc, log) => {
+                acc[log.subj] = (acc[log.subj] || 0) + log.time;
+                return acc;
+            }, {});
+            const subjectLabels = Object.keys(subjectData);
+            const subjectValues = Object.values(subjectData);
+
+            const dynamicColors = subjectLabels.map((_, i) => `hsl(${i * 60}, 70%, 60%)`); // Generate distinct colors
+
+            if (subjectBreakdownChartInstance) subjectBreakdownChartInstance.destroy();
+            subjectBreakdownChartInstance = new Chart(subjectCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: subjectLabels,
+                    datasets: [{
+                        data: subjectValues,
+                        backgroundColor: dynamicColors,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-primary')
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Mood Trend Chart (Last 7 Days)
+            const moodCtx = document.getElementById('moodTrendChart').getContext('2d');
+            const moodMap = {
+                '😌 Calm': 1, '😤 Focused': 2, '💡 Inspired': 3, '⚡ Energized': 4,
+                '😖 Tired': -1, '🤯 Burnout': -2, '': 0 // Map moods to numerical values
+            };
+            const reverseMoodMap = {
+                '-2': '🤯 Burnout', '-1': '😖 Tired', '0': 'N/A', '1': '😌 Calm', '2': '😤 Focused', '3': '💡 Inspired', '4': '⚡ Energized'
+            };
+
+            const moodDataPoints = last7Days.map(date => {
+                const dayLogs = logs.filter(l => l.date === date && l.mood);
+                if (dayLogs.length === 0) return 0; // No mood logged for this day
+                const avgMood = dayLogs.reduce((sum, l) => sum + (moodMap[l.mood] || 0), 0) / dayLogs.length;
+                return avgMood;
+            });
+
+            if (moodTrendChartInstance) moodTrendChartInstance.destroy();
+            moodTrendChartInstance = new Chart(moodCtx, {
+                type: 'line',
+                data: {
+                    labels: last7Days.map(d => new Date(d).getDate()),
+                    datasets: [{
+                        label: 'Average Mood',
+                        data: moodDataPoints,
+                        borderColor: currentAccentColor,
+                        backgroundColor: `rgba(${currentAccentColorRGB}, 0.3)`,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: {
+                            grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--color-input-border') },
+                            ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-primary') }
+                        },
+                        y: {
+                            beginAtZero: false, // Mood can be negative
+                            min: -2,
+                            max: 4,
+                            grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--color-input-border') },
+                            ticks: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-primary'),
+                                callback: function(value) {
+                                    return reverseMoodMap[value] || value; // Display mood labels
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
 
-        // Fallback for when Supabase is not configured or fails
-        function loadInitialDataFromLocalStorage() {
-            const storedLogs = localStorage.getItem('beastieLogs');
-            if (storedLogs) {
-                logs = JSON.parse(storedLogs);
-                // Ensure logs are sorted if coming from localStorage without timestamp
-                logs.sort((a, b) => new Date(b.date) - new Date(a.date));
-            } else {
-                logs = [];
+        // --- Gamification Functions ---
+        function checkLevelUp() {
+            const currentLevelXPNeeded = userLevel * XP_PER_LEVEL;
+            if (userXP >= currentLevelXPNeeded) {
+                userLevel++;
+                userXP -= currentLevelXPNeeded; // Carry over remaining XP
+                showMessage(`🎉 LEVEL UP! You are now Level ${userLevel}!`, 'success', 4000);
+                // Recursively check if enough XP for next level immediately
+                checkLevelUp();
             }
-            const storedGoal = localStorage.getItem('beastieGoal');
-            if (storedGoal) {
-                goal = parseInt(storedGoal);
-                document.getElementById('goalInput').value = goal;
-            } else {
-                goal = 0;
-            }
-            updateAll();
+            updateGamificationDisplay();
         }
 
-        // --- Password Lock (Modified for fixed password) ---
+        function updateGamificationDisplay() {
+            document.getElementById('levelDisplay').textContent = `Level: ${userLevel} (${userXP} XP)`;
+            const nextLevelXPNeeded = userLevel * XP_PER_LEVEL;
+            const xpPercentage = (userXP / nextLevelXPNeeded) * 100;
+            document.getElementById('xpFill').style.width = `${xpPercentage}%`;
+            document.getElementById('xpText').textContent = `Next Level: ${nextLevelXPNeeded - userXP} XP to Level ${userLevel + 1}`;
+            renderAchievements();
+        }
+
+        function checkAchievements() {
+            let newAchievementEarned = false;
+            achievements.forEach(ach => {
+                if (!ach.earned && ach.check()) {
+                    ach.earned = true;
+                    newAchievementEarned = true;
+                    showMessage(`🏆 Achievement Unlocked: ${ach.name}!`, 'success', 5000);
+                }
+            });
+            if (newAchievementEarned) {
+                saveToLocalStorage('beastieAchievements', achievements);
+                renderAchievements();
+            }
+        }
+
+        function renderAchievements() {
+            const achievementsGrid = document.getElementById('achievementsGrid');
+            achievementsGrid.innerHTML = '';
+            achievements.forEach(ach => {
+                const badge = document.createElement('div');
+                badge.className = `achievement-badge ${ach.earned ? 'earned' : ''}`;
+                badge.innerHTML = `
+                    <span class="icon">${ach.icon}</span>
+                    <span class="name">${ach.name}</span>
+                    <p class="text-xs text-[var(--color-text-secondary)] mt-1">${ach.description}</p>
+                `;
+                achievementsGrid.appendChild(badge);
+            });
+        }
+
+        // --- Filter & Search Logs ---
+        function filterLogs() {
+            const searchText = document.getElementById('logSearchInput').value.toLowerCase();
+            const filterSubject = document.getElementById('logFilterSubject').value;
+            const filterDateStart = document.getElementById('logFilterDateStart').value;
+            const filterDateEnd = document.getElementById('logFilterDateEnd').value;
+
+            const filtered = logs.filter(log => {
+                const matchesSearch = log.note.toLowerCase().includes(searchText) ||
+                                      log.subj.toLowerCase().includes(searchText) ||
+                                      log.session.toLowerCase().includes(searchText) ||
+                                      log.kind.toLowerCase().includes(searchText) ||
+                                      (log.mood ? log.mood.toLowerCase().includes(searchText) : false);
+                const matchesSubject = filterSubject === "" || log.subj === filterSubject;
+
+                let matchesDate = true;
+                if (filterDateStart) {
+                    const startDate = new Date(filterDateStart);
+                    const logDate = new Date(log.date);
+                    matchesDate = matchesDate && (logDate.setHours(0,0,0,0) >= startDate.setHours(0,0,0,0));
+                }
+                if (filterDateEnd) {
+                    const endDate = new Date(filterDateEnd);
+                    const logDate = new Date(log.date);
+                    matchesDate = matchesDate && (logDate.setHours(0,0,0,0) <= endDate.setHours(0,0,0,0));
+                }
+                return matchesSearch && matchesSubject && matchesDate;
+            });
+            renderFilteredLogs(filtered);
+        }
+
+        function renderFilteredLogs(filteredLogs) {
+            const logListContainer = document.getElementById('logListContainer');
+            logListContainer.innerHTML = '';
+            if (filteredLogs.length === 0) {
+                logListContainer.innerHTML = '<p class="text-center text-[var(--color-text-secondary)] italic">No logs match your filters.</p>';
+                return;
+            }
+            filteredLogs.forEach(log => {
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                entry.innerHTML = `
+                    <p><strong>Date:</strong> ${log.date} | <strong>Subject:</strong> ${log.subj} | <strong>Time:</strong> ${log.time} min</p>
+                    <p><em>Session:</em> ${log.session} | <em>Type:</em> ${log.kind} | <em>Mood:</em> ${log.mood || 'N/A'}</p>
+                    ${log.note ? `<p><em>Notes:</em> ${log.note}</p>` : ''}
+                `;
+                logListContainer.appendChild(entry);
+            });
+        }
+
+
+        // --- Main Update Function ---
+        function updateAll() {
+            updateStreak();
+            updateStats();
+            updateGoal();
+            drawCalendar();
+            renderCharts(); // Re-render charts with updated data
+            updateGamificationDisplay();
+            renderTodos(); // Re-render to-do list
+            filterLogs(); // Re-render filtered logs
+        }
+
+        // --- Password Lock ---
         function checkPassword() {
             const inp = document.getElementById("authPass").value;
             
             if (!inp) {
-                alert("Please enter the password.");
+                showMessage("Please enter the password.", 'error');
                 return;
             }
 
             if (inp === FIXED_PASSWORD) { // Check against the fixed password
                 unlockUI();
             } else { // Incorrect password
-                alert("❌ Incorrect password! Try again.");
+                showMessage("❌ Incorrect password! Try again.", 'error');
                 document.getElementById("authPass").value = ""; // Clear input
             }
         }
 
         function unlockUI() {
             const o = document.getElementById("authOverlay");
-            o.style.animation = "fadeOut .4s ease forwards";
-            setTimeout(async () => {
-                o.remove(); // Remove overlay after animation
-                await signInAnonymouslySupabase(); // Call Supabase sign-in AFTER overlay is gone
-            }, 400); 
+            const mainContent = document.getElementById('mainContent');
+
+            o.style.animation = "fadeOut .4s ease forwards"; // Start fade out animation
+            
+            // Wait for the animation to complete for the overlay
+            setTimeout(() => {
+                o.remove(); // Remove overlay from DOM
+
+                // Now, make main content visible and start its fade-in
+                mainContent.style.opacity = '1';
+                mainContent.style.visibility = 'visible';
+                
+                // Load initial data and render UI after main content is visible
+                loadInitialData(); 
+            }, 400); // Match this timeout to the fadeOut animation duration
         }
+
+        // --- Initial Load ---
+        function loadInitialData() {
+            // Load theme and accent color first
+            currentTheme = loadFromLocalStorage('beastieTheme', 'dark');
+            if (currentTheme === 'light') {
+                document.body.classList.add('light-mode');
+            }
+            const savedAccentName = loadFromLocalStorage('beastieAccentColor', 'Cyan');
+            applyAccentColor(savedAccentName); // Apply saved accent color
+
+            logs = loadFromLocalStorage('beastieLogs', []);
+            // Ensure logs are sorted by timestamp (if available) or date
+            logs.sort((a, b) => (b.timestamp || new Date(b.date).getTime()) - (a.timestamp || new Date(b.date).getTime()));
+
+            goal = loadFromLocalStorage('beastieGoal', 0);
+            document.getElementById('goalInput').value = goal; // Set the input value
+
+            userXP = loadFromLocalStorage('beastieXP', 0);
+            userLevel = loadFromLocalStorage('beastieLevel', 1);
+            
+            // Load achievements, merging with default definitions to pick up new ones
+            const loadedAchievements = loadFromLocalStorage('beastieAchievements', []);
+            achievements.forEach(defaultAch => {
+                const loadedAch = loadedAchievements.find(a => a.id === defaultAch.id);
+                if (loadedAch) {
+                    defaultAch.earned = loadedAch.earned;
+                }
+            });
+            saveToLocalStorage('beastieAchievements', achievements); // Save back in case new ones were added
+
+            todos = loadFromLocalStorage('beastieTodos', []);
+
+            loadPomodoroSettings(); // Load Pomodoro settings
+
+            updateAll(); // Render all UI elements
+        }
+
+        // --- Event Listeners for new features ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Pomodoro Controls
+            document.getElementById('startTimer').addEventListener('click', startTimer);
+            document.getElementById('pauseTimer').addEventListener('click', pauseTimer);
+            document.getElementById('resetTimer').addEventListener('click', resetTimer);
+            document.getElementById('studyMins').addEventListener('change', resetTimer);
+            document.getElementById('breakMins').addEventListener('change', resetTimer);
+
+            // To-Do Input Enter Key
+            document.getElementById('todoInput').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent default form submission if any
+                    addTodo();
+                }
+            });
+        });
+
 
         // --- On Page Load ---
         window.onload = () => {
@@ -1017,9 +2020,6 @@
 
             const ov = document.getElementById("authOverlay");
             ov.style.display = "flex"; // Always show the password overlay
-
-            // The password title and button text are now fixed in HTML
-            // and the checkPassword function handles the fixed password.
         };
     </script>
 </body>
