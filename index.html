@@ -10,113 +10,70 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
-       /* Base CSS for Material You inspired theme and animations */
-:root {
-    /* Default Dark Mode Colors (keeping these for other elements) */
-    --color-primary: #8e2de2; /* Deep Purple */
-    --color-secondary: #4a00e0; /* Darker Purple */
-    --color-tertiary: #a8c0ff; /* Light Blue */
-    --color-background: #1a1a2e; /* Dark Blue-Purple */
-    --color-surface: rgba(36, 36, 58, 0.8); /* Slightly lighter surface */
-    --color-text-primary: #e0e0e0; /* Light Gray */
-    --color-text-secondary: #a0a0a0; /* Medium Gray */
-    --color-border: rgba(255, 255, 255, 0.15);
-    --color-input-bg: rgba(255, 255, 255, 0.1);
-    --color-input-border: rgba(255, 255, 255, 0.3);
-    --color-accent-base: #00cfff; /* Cyan for accents */
-    --color-success: #8BC34A; /* Green for success */
-    --color-error: #FF6F61; /* Red for error */
-    
+        /* Base CSS for Material You inspired theme and animations */
+        :root {
+            /* Default Dark Mode Colors (keeping these for other elements) */
+            --color-primary: #8e2de2; /* Deep Purple */
+            --color-secondary: #4a00e0; /* Darker Purple */
+            --color-tertiary: #a8c0ff; /* Light Blue */
+            --color-background: #1a1a2e; /* Dark Blue-Purple */
+            --color-surface: rgba(36, 36, 58, 0.8); /* Slightly lighter surface */
+            --color-text-primary: #e0e0e0; /* Light Gray */
+            --color-text-secondary: #a0a0a0; /* Medium Gray */
+            --color-border: rgba(255, 255, 255, 0.15);
+            --color-input-bg: rgba(255, 255, 255, 0.1);
+            --color-input-border: rgba(255, 255, 255, 0.3);
+            --color-accent-base: #00cfff; /* Cyan for accents */
+            --color-success: #8BC34A; /* Green for success */
+            --color-error: #FF6F61; /* Red for error */
+            
+            /* RGB versions for rgba() usage */
+            --color-primary-rgb: 142, 45, 226;
+            --color-success-rgb: 139, 195, 74;
+            --color-error-rgb: 255, 111, 97;
+            --color-accent-base-rgb: 0, 207, 255;
+        }
 
-    /* RGB versions for rgba() usage */
-    --color-primary-rgb: 142, 45, 226;
-    --color-success-rgb: 139, 195, 74;
-    --color-error-rgb: 255, 111, 97;
-    --color-accent-base-rgb: 0, 207, 255;
-}
+        /* Light Mode Colors - Adjusted for better contrast with image */
+        body.light-mode {
+            --color-primary: #673AB7; /* Deep Purple */
+            --color-secondary: #512DA8; /* Darker Purple */
+            --color-tertiary: #7C4DFF; /* Lighter Purple */
+            --color-background: #f0f2f5; /* Light Gray Background */
+            --color-surface: rgba(255, 255, 255, 0.9); /* White surface */
+            --color-text-primary: #212121; /* Dark Gray */
+            --color-text-secondary: #616161; /* Medium Gray */
+            --color-border: rgba(0, 0, 0, 0.1);
+            --color-input-bg: rgba(240, 240, 240, 0.9);
+            --color-input-border: rgba(0, 0, 0, 0.2);
+            --color-accent-base: #00BCD4; /* Cyan for accents */
+            --color-success: #4CAF50; /* Green for success */
+            --color-error: #F44336; /* Red for error */
 
-/* Light Mode Colors */
-body.light-mode {
-    --color-primary: #673AB7; /* Deep Purple */
-    --color-secondary: #512DA8; /* Darker Purple */
-    --color-tertiary: #7C4DFF; /* Lighter Purple */
-    --color-background: #f0f2f5; /* Light Gray Background */
-    --color-surface: rgba(255, 255, 255, 0.9); /* White surface */
-    --color-text-primary: #212121; /* Dark Gray */
-    --color-text-secondary: #616161; /* Medium Gray */
-    --color-border: rgba(0, 0, 0, 0.1);
-    --color-input-bg: rgba(240, 240, 240, 0.9);
-    --color-input-border: rgba(0, 0, 0, 0.2);
-    --color-accent-base: #00BCD4; /* Cyan for accents */
-    --color-success: #4CAF50; /* Green for success */
-    --color-error: #F44336; /* Red for error */
-    
-    /* NEW: Rainbow Gradient Colors - Light Mode (slightly softer) */
-    --bg-gradient-color1-light: #ff6347; /* Tomato */
-    --bg-gradient-color2-light: #ffa500; /* Orange */
-    --bg-gradient-color3-light: #ffd700; /* Gold */
-    --bg-gradient-color4-light: #32cd32; /* LimeGreen */
-    --bg-gradient-color5-light: #6495ed; /* CornflowerBlue */
-    --bg-gradient-color6-light: #9370db; /* MediumPurple */
-    --bg-gradient-color7-light: #ee82ee; /* Violet */
+            /* RGB versions for rgba() usage in light mode */
+            --color-primary-rgb: 103, 58, 183;
+            --color-success-rgb: 76, 175, 80;
+            --color-error-rgb: 244, 67, 54;
+            --color-accent-base-rgb: 0, 188, 212;
+        }
 
-    /* RGB versions for rgba() usage in light mode */
-    --color-primary-rgb: 103, 58, 183;
-    --color-success-rgb: 76, 175, 80;
-    --color-error-rgb: 244, 67, 54;
-    --color-accent-base-rgb: 0, 188, 212;
-}
-
-/* Global Reset & Core Styling */
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Montserrat', sans-serif;}
-html,body {
-    min-height:100vh;
-    font-size: 14px;
-    /* Updated gradient for rainbow effect */
-    background: linear-gradient(
-        135deg, 
-        var(--bg-gradient-color1-dark), 
-        var(--bg-gradient-color2-dark), 
-        var(--bg-gradient-color3-dark), 
-        var(--bg-gradient-color4-dark), 
-        var(--bg-gradient-color5-dark), 
-        var(--bg-gradient-color6-dark), 
-        var(--bg-gradient-color7-dark)
-    ); 
-    background-size: 400% 400%; /* Larger size for animation */
-    background-position: 0% 50%; /* Starting position for animation */
-    animation: bgPulseRainbow 25s ease infinite; /* New animation name for rainbow */
-    color: var(--color-text-primary);
-    display:flex;flex-direction:column;align-items:center;padding:15px;
-    overflow-x: hidden;
-    transition: background-color 0.5s ease, color 0.5s ease; /* Smooth theme transition */
-}
-
-/* Light mode specific background gradient */
-body.light-mode {
-    background: linear-gradient(
-        135deg, 
-        var(--bg-gradient-color1-light), 
-        var(--bg-gradient-color2-light), 
-        var(--bg-gradient-color3-light), 
-        var(--bg-gradient-color4-light), 
-        var(--bg-gradient-color5-light), 
-        var(--bg-gradient-color6-light), 
-        var(--bg-gradient-color7-light)
-    ); 
-    background-size: 400% 400%;
-    background-position: 0% 50%;
-    animation: bgPulseRainbow 25s ease infinite; /* Same animation for light mode */
-}
-
-/* Keyframes for the rainbow animation */
-@keyframes bgPulseRainbow {
-    0% { background-position: 0% 50%; }
-    25% { background-position: 50% 100%; }
-    50% { background-position: 100% 50%; }
-    75% { background-position: 50% 0%; }
-    100% { background-position: 0% 50%; }
-}
+        /* Global Reset & Core Styling */
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Montserrat', sans-serif;}
+        html,body {
+            min-height:100vh;
+            font-size: 14px;
+            /* Background Image - Static */
+            background-image: url('https://wallpaperaccess.com/full/39613.jpg'); /* New image URL */
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Ensures background stays fixed during scroll */
+            color: var(--color-text-primary);
+            display:flex;flex-direction:column;align-items:center;padding:15px;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease, color 0.5s ease; /* Smooth theme transition */
+        }
+        /* No @keyframes for background animation needed */
 
         /* --- Material You Card Styling --- */
         .card {
@@ -128,10 +85,9 @@ body.light-mode {
             padding: 32px; /* Increased padding */
             position: relative;
             overflow: hidden;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.2); /* Softer shadow */
-            border: 1px solid var(--color-border);
-            backdrop-filter: blur(15px) saturate(180%); /* Softer blur */
-            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3); /* Stronger, more diffused shadow */
+            backdrop-filter: blur(20px) saturate(180%); /* Stronger blur for glassmorphism */
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
 
             transform:translateY(30px);
             opacity:0;
@@ -144,7 +100,7 @@ body.light-mode {
             font-family: 'Orbitron', sans-serif;
             font-size:3.2rem;
             margin-bottom:15px;
-            color: var(--color-accent-base); /* Accent color for main title */
+            color: #ffffff; /* Explicitly white for contrast */
             text-shadow: 0 0 15px rgba(0, 200, 255, 0.6); /* Subtle glow */
             letter-spacing: 2px;
             text-align: center;
@@ -382,11 +338,21 @@ body.light-mode {
         }
         #authPopup input:focus{box-shadow:0 0 0 3px var(--color-accent-base),0 0 20px rgba(var(--color-accent-base-rgb), 0.7);}
         #authPopup button{
-            padding:14px 30px;background:linear-gradient(45deg, var(--color-accent-base), #4D8EFF); color:#fff;
-            border:none;border-radius:28px;cursor:pointer;font-weight:700;
-            transition:all .5s ease; box-shadow:0 8px 20px rgba(0,196,204,0.4);
+            padding:14px 30px;
+            background:linear-gradient(45deg, var(--color-accent-base), #4D8EFF); 
+            color:#fff;
+            border:none;
+            border-radius:28px;
+            cursor:pointer;
+            font-weight:700;
+            transition:all .5s ease; 
+            box-shadow:0 8px 20px rgba(0,196,204,0.4);
             position: relative;
             overflow: hidden;
+            /* Fix for stretched button */
+            display: block; /* Make it a block element to center with margin auto */
+            margin: 0 auto; /* Center the button */
+            max-width: 250px; /* Limit its width */
         }
         #authPopup button:hover{
             background:linear-gradient(45deg, #4D8EFF, var(--color-accent-base)); transform: translateY(-3px); box-shadow:0 12px 25px rgba(0,196,204,0.5);
@@ -606,6 +572,9 @@ body.light-mode {
             border-radius: 20px;
             border: 1px solid var(--color-input-border);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            /* Responsive height for charts */
+            height: 350px; /* Default height for larger screens */
+            overflow-y: hidden; /* Hide scrollbar on larger screens */
         }
         .chart-wrapper h3 {
             font-size: 1.2rem;
@@ -615,7 +584,7 @@ body.light-mode {
         }
         canvas {
             max-width: 100%;
-            height: auto;
+            height: auto; /* Allow canvas to scale within its wrapper */
         }
 
         /* --- Gamification --- */
@@ -743,7 +712,7 @@ body.light-mode {
             .card { max-width: 650px; padding: 40px; border-radius: 32px; }
             h1 { font-size: 4rem; letter-spacing: 3px; }
             #greeting { font-size: 1.2rem; }
-            .quote { font-size: 1.9rem; font-family: Gabriola;}
+            .quote { font-size: 1.3rem; }
             input, select, textarea, button { font-size: 1.1rem; padding: 16px; border-radius: 24px; }
             .radio-group label { padding: 12px 22px; border-radius: 24px; }
             .calendar div { padding: 12px 20px; border-radius: 18px; min-width: 70px; font-size: 1rem; }
@@ -760,15 +729,33 @@ body.light-mode {
             .achievement-badge { width: 130px; height: 130px; padding: 20px; border-radius: 24px; }
             .achievement-badge .icon { font-size: 3rem; }
             .achievement-badge .name { font-size: 0.95rem; }
+
+            /* Charts on larger screens */
+            .chart-wrapper {
+                height: 350px; /* Default height for larger screens */
+                overflow-y: hidden;
+            }
         }
 
         @media (max-width: 600px) {
             html, body { padding: 10px; font-size: 13px; }
+            /* Mobile-specific adjustments for cards and main content */
+            .card { 
+                padding: 20px; 
+                margin-bottom: 18px; 
+                border-radius: 20px; 
+                max-width: calc(100% - 20px); /* Ensures cards don't touch edges */
+            }
+            #mainContent {
+                padding: 0; /* Remove main content padding as cards have their own */
+                max-width: 100%; /* Allow main content to use full width */
+            }
+
             h1 { font-size: 2rem; margin-bottom: 10px; letter-spacing: 1px;}
             #greeting { font-size: 0.9rem; margin-bottom: 12px; }
             .quote { font-size: 0.95rem; margin-bottom: 18px;}
             #clock { font-size: 0.85rem; right: 10px; top: 10px; padding: 7px 12px; border-radius: 18px; }
-            .card { padding: 20px; margin-bottom: 18px; border-radius: 20px; }
+            
             input, select, textarea, button { padding: 10px; margin-bottom: 12px; font-size: 0.9rem; border-radius: 16px; }
             .radio-group { flex-direction: column; gap: 8px; align-items: stretch;}
             .radio-group label { padding: 8px 12px; border-radius: 16px; justify-content: center; }
@@ -788,6 +775,13 @@ body.light-mode {
             .achievement-badge { width: 100px; height: 100px; padding: 10px; border-radius: 16px; }
             .achievement-badge .icon { font-size: 2rem; }
             .achievement-badge .name { font-size: 0.8rem; }
+
+            /* Charts on mobile - fixed height and scrollable */
+            .chart-wrapper {
+                height: 200px; /* Fixed height for mobile charts */
+                overflow-y: auto; /* Enable vertical scrolling */
+                padding-right: 10px; /* Space for scrollbar */
+            }
         }
     </style>
 </head>
@@ -817,16 +811,14 @@ body.light-mode {
     </div>
 
     <!-- Main Content (initially hidden until unlocked) -->
-    <div id="mainContent" class="card w-full mb-6">
-        <!-- NEW: Flexbox container for the header elements -->
-        <div class="flex flex-col items-center mb-6"> <!-- Added mb-6 for spacing below the header block -->
-            <h1>🔥Beastie Tracker</h1><br>
+    <div id="mainContent" class="flex flex-col items-center w-full max-w-4xl px-4" style="opacity:0; visibility:hidden; transition: opacity 0.5s ease, visibility 0.5s ease;">
+        <!-- Header Section with Flexbox -->
+        <div class="flex flex-col items-center mb-6">
+            <h1>🌟 Legendary Beastie Tracker</h1>
             <div id="greeting"></div>
             <div class="quote" id="quote">“Don't wish for it, work for it.”</div>
         </div>
         <div id="clock"></div>
-
-        <!-- ... rest of your mainContent ... -->
 
         <!-- Theme & Accent Color Settings -->
         <div class="card w-full mb-6">
