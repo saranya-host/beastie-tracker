@@ -313,8 +313,16 @@
             position:fixed;inset:0;
             backdrop-filter:blur(18px) saturate(180%);
             background:rgba(0,0,0,0.8);
-            display:flex;align-items:center;justify-content:center;
-            z-index:9999;animation:fadeIn .8s ease-in-out;
+            align-items:center;justify-content:center;
+            z-index:9999;
+            opacity: 0; /* Managed by JS */
+            visibility: hidden; /* Managed by JS */
+            transition: opacity 0.5s ease, visibility 0.5s ease, transform 0.5s ease;
+        }
+        #authOverlay.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
         #authPopup {
             background:var(--color-surface);
@@ -706,6 +714,288 @@
             justify-content: center;
         }
 
+        /* --- Spinner CSS --- */
+        .spinner {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                #4285f4, /* Blue */
+                #ea4335, /* Red */
+                #fbbc05, /* Yellow */
+                #34a853, /* Green */
+                #4285f4  /* Blue (to complete the cycle) */
+            );
+            animation: rotate 1s linear infinite;
+            mask: radial-gradient(farthest-side, transparent 60%, black 61%);
+            -webkit-mask: radial-gradient(farthest-side, transparent 60%, black 61%);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05) inset,
+                        0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* --- Loading Overlay --- */
+        #loadingOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8); /* Darker background for contrast */
+            backdrop-filter: blur(15px) saturate(180%); /* Glassmorphism effect */
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            display: flex;
+            flex-direction: column; /* Stack spinner and text vertically */
+            justify-content: center;
+            align-items: center;
+            z-index: 10002; /* Higher than authOverlay */
+            opacity: 1; /* Initially visible */
+            visibility: visible;
+            transition: opacity 0.5s ease, visibility 0.5s ease; /* Smooth fade-out */
+        }
+
+        #loadingOverlay .loading-message {
+            margin-top: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: #ffffff; /* White text for visibility */
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            text-align: center;
+            padding: 0 20px; /* Add some padding for small screens */
+        }
+
+        /* --- Tab Navigation --- */
+        #tabNav {
+            display: flex;
+            flex-wrap: wrap; /* Allow tabs to wrap on smaller screens */
+            justify-content: center;
+            gap: 10px; /* Space between tabs */
+            margin-bottom: 25px;
+            padding: 10px;
+            background: var(--color-surface);
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            border: 1px solid var(--color-border);
+        }
+
+        .tab-button {
+            background: var(--color-input-bg);
+            color: var(--color-text-primary);
+            padding: 10px 18px;
+            border-radius: 20px;
+            border: 1px solid var(--color-input-border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            white-space: nowrap; /* Prevent text wrapping inside buttons */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .tab-button:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .tab-button.active {
+            background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+            color: #fff;
+            box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.6);
+            border-color: var(--color-primary);
+            transform: translateY(-1px);
+        }
+
+        /* --- Mobile Navigation (Hamburger) --- */
+        #mobileNavToggle {
+            display: none; /* Hidden by default, shown on mobile */
+            font-size: 2rem;
+            background: none;
+            border: none;
+            color: var(--color-text-primary);
+            cursor: pointer;
+            padding: 5px 10px;
+            z-index: 1000; /* Ensure it's above other content */
+        }
+
+        #mobileNavOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        #mobileNavOverlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #mobileNavOverlay .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2.5rem;
+            color: #fff;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        #mobileNavOverlay .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+
+        #mobileNavOverlay .mobile-nav-links .tab-button {
+            width: 200px; /* Fixed width for mobile menu buttons */
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            border-radius: 28px;
+        }
+
+
+        /* --- Content Sections --- */
+        .content-section {
+            display: none; /* Hidden by default, shown by JS */
+            width: 100%;
+        }
+        .content-section.active {
+            display: block;
+        }
+
+        /* --- Revision Hub Specific Styles --- */
+        .revision-item {
+            background: var(--color-input-bg);
+            padding: 15px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            border: 1px solid var(--color-input-border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            color: var(--color-text-primary);
+            line-height: 1.5;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .revision-item.finished {
+            opacity: 0.7;
+            background: rgba(var(--color-success-rgb), 0.1);
+            border-color: var(--color-success);
+        }
+        .revision-item strong { color: var(--color-accent-base); }
+        .revision-item em { color: var(--color-text-secondary); }
+        .revision-item .mark-button {
+            align-self: flex-end; /* Align button to the right */
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            border-radius: 18px;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A); /* Green gradient */
+            color: #fff;
+            border: none;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        .revision-item .mark-button:hover {
+            background: linear-gradient(90deg, #8BC34A, #4CAF50);
+            transform: scale(1.02);
+        }
+        .revision-item.finished .mark-button {
+            background: #616161; /* Grey out when finished */
+            cursor: not-allowed;
+            opacity: 0.5;
+            box-shadow: none;
+        }
+
+        /* --- AI Feature Specific Styles --- */
+        .ai-output-area {
+            background: var(--color-input-bg);
+            padding: 15px;
+            border-radius: 16px;
+            border: 1px solid var(--color-input-border);
+            min-height: 100px;
+            margin-top: 20px;
+            white-space: pre-wrap; /* Preserve whitespace and wrap text */
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--color-text-primary);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            overflow-y: auto; /* Allow scrolling for long content */
+            max-height: 300px; /* Limit height for long content */
+        }
+        .ai-loading-indicator {
+            text-align: center;
+            font-style: italic;
+            color: var(--color-text-secondary);
+            margin-top: 10px;
+        }
+
+        /* --- AI Recaller Specific Styles --- */
+        .recall-item {
+            background: var(--color-input-bg);
+            padding: 15px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            border: 1px solid var(--color-input-border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            color: var(--color-text-primary);
+            line-height: 1.5;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .recall-item.overdue {
+            background: rgba(var(--color-error-rgb), 0.15); /* Light red for overdue */
+            border-color: var(--color-error);
+            box-shadow: 0 0 10px rgba(var(--color-error-rgb), 0.5);
+        }
+        .recall-item.completed {
+            opacity: 0.7;
+            background: rgba(var(--color-success-rgb), 0.1);
+            border-color: var(--color-success);
+        }
+        .recall-item strong { color: var(--color-accent-base); }
+        .recall-item em { color: var(--color-text-secondary); }
+        .recall-item .mark-button {
+            align-self: flex-end;
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            border-radius: 18px;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            color: #fff;
+            border: none;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        .recall-item .mark-button:hover {
+            background: linear-gradient(90deg, #8BC34A, #4CAF50);
+            transform: scale(1.02);
+        }
+        .recall-item.completed .mark-button {
+            background: #616161;
+            cursor: not-allowed;
+            opacity: 0.5;
+            box-shadow: none;
+        }
+
+
         /* --- MEDIA QUERIES FOR RESPONSIVENESS --- */
         @media (min-width: 1024px) {
             html, body { font-size: 15px; padding: 20px; }
@@ -735,6 +1025,10 @@
                 height: 350px; /* Default height for larger screens */
                 overflow-y: hidden;
             }
+
+            /* Desktop: Show full tab navigation, hide mobile toggle */
+            #tabNav { display: flex; }
+            #mobileNavToggle { display: none; }
         }
 
         @media (max-width: 600px) {
@@ -782,10 +1076,20 @@
                 overflow-y: auto; /* Enable vertical scrolling */
                 padding-right: 10px; /* Space for scrollbar */
             }
+
+            /* Mobile: Hide full tab navigation, show mobile toggle */
+            #tabNav { display: none; }
+            #mobileNavToggle { display: block; position: fixed; top: 15px; left: 15px; z-index: 1001; }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay (Spinner with Quote) -->
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-message">Your Beastie Tracker is Crafting...</div>
+    </div>
+
     <!-- Custom Message Box -->
     <div id="messageBox" class="text-sm"></div>
 
@@ -802,7 +1106,7 @@
     </div>
 
     <!-- Password Overlay -->
-    <div id="authOverlay" class="flex" style="display:none;">
+    <div id="authOverlay" style="display:none;">
         <div id="authPopup">
             <h2 id="authTitle">🔐 Verify it's you</h2><br>
             <input id="authPass" type="password" placeholder="Enter Password" />
@@ -810,18 +1114,59 @@
         </div>
     </div>
 
+    <!-- Mobile Navigation Toggle (Hamburger) -->
+    <button id="mobileNavToggle" onclick="toggleMobileNav()">☰</button>
+
+    <!-- Mobile Navigation Overlay -->
+    <div id="mobileNavOverlay" style="display:none;">
+        <button class="close-btn" onclick="toggleMobileNav()">✖️</button>
+        <div class="mobile-nav-links">
+            <button class="tab-button" onclick="showTab('logStudySection'); toggleMobileNav();">📝 Log Study</button>
+            <button class="tab-button" onclick="showTab('pomodoroSection'); toggleMobileNav();">🍅 Pomodoro</button>
+            <button class="tab-button" onclick="showTab('todoListSection'); toggleMobileNav();">✅ To-Do List</button>
+            <button class="tab-button" onclick="showTab('dailyProgressSection'); toggleMobileNav();">📊 Daily Progress</button>
+            <button class="tab-button" onclick="showTab('calendarSection'); toggleMobileNav();">🗓️ Calendar</button>
+            <button class="tab-button" onclick="showTab('studyInsightsSection'); toggleMobileNav();">📈 Study Insights</button>
+            <button class="tab-button" onclick="showTab('gamificationSection'); toggleMobileNav();">🏆 Achievements</button>
+            <button class="tab-button" onclick="showTab('revisionHubSection'); toggleMobileNav();">🔄 Revision Hub</button>
+            <button class="tab-button" onclick="showTab('aiRecallerSection'); toggleMobileNav();">⏰ AI Recaller</button>
+            <button class="tab-button" onclick="showTab('aiStudyPlannerSection'); toggleMobileNav();">✨ AI Planner</button>
+            <button class="tab-button" onclick="showTab('aiAssistantSection'); toggleMobileNav();">🧠 AI Assistant</button>
+            <button class="tab-button" onclick="showTab('filterExportSection'); toggleMobileNav();">🔍 Filter & Export</button>
+            <button class="tab-button" onclick="showTab('personalizeSection'); toggleMobileNav();">🎨 Personalize</button>
+        </div>
+    </div>
+
+
     <!-- Main Content (initially hidden until unlocked) -->
-    <div id="mainContent" class="flex flex-col items-center w-full max-w-4xl px-4" style="opacity:0; visibility:hidden; transition: opacity 0.5s ease, visibility 0.5s ease;">
+    <div id="mainContent" class="flex flex-col items-center w-full max-w-4xl px-4" style="display:none;">
         <!-- Header Section with Flexbox -->
         <div class="flex flex-col items-center mb-6">
-            <h1>🌟 Legendary Beastie Tracker</h1>
-            <div id="greeting"></div>
+            <h1>Beastie Tracker</h1>
+            <div id="greeting"></div><strong>Version: </strong><i><b>Neo 2 Stable</b></i>
             <div class="quote" id="quote">“Don't wish for it, work for it.”</div>
         </div>
         <div id="clock"></div>
 
-        <!-- Theme & Accent Color Settings -->
-        <div class="card w-full mb-6">
+        <!-- Tab Navigation (Desktop Only) -->
+        <div id="tabNav">
+            <button class="tab-button active" onclick="showTab('logStudySection')">📝 Log Study</button>
+            <button class="tab-button" onclick="showTab('pomodoroSection')">🍅 Pomodoro</button>
+            <button class="tab-button" onclick="showTab('todoListSection')">✅ To-Do List</button>
+            <button class="tab-button" onclick="showTab('dailyProgressSection')">📊 Daily Progress</button>
+            <button class="tab-button" onclick="showTab('calendarSection')">🗓️ Calendar</button>
+            <button class="tab-button" onclick="showTab('studyInsightsSection')">📈 Study Insights</button>
+            <button class="tab-button" onclick="showTab('gamificationSection')">🏆 Achievements</button>
+            <button class="tab-button" onclick="showTab('revisionHubSection')">🔄 Revision Hub</button>
+            <button class="tab-button" onclick="showTab('aiRecallerSection')">⏰ AI Recaller</button>
+            <button class="tab-button" onclick="showTab('aiStudyPlannerSection')">✨ AI Planner</button>
+            <button class="tab-button" onclick="showTab('aiAssistantSection')">🧠 AI Assistant</button>
+            <button class="tab-button" onclick="showTab('filterExportSection')">🔍 Filter & Export</button>
+            <button class="tab-button" onclick="showTab('personalizeSection')">🎨 Personalize</button>
+        </div>
+
+        <!-- Content Sections -->
+        <div id="personalizeSection" class="content-section card w-full mb-6">
             <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">🎨 Personalize Your Tracker</h2>
             <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-4">
                 <button onclick="toggleDarkMode()" class="text-sm md:text-base">🌓 Toggle Light/Dark Mode</button>
@@ -832,8 +1177,7 @@
             </div>
         </div>
 
-        <!-- Log Study Section -->
-        <div class="card w-full">
+        <div id="logStudySection" class="content-section card w-full active">
             <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">📝 Log Epic Study</h2>
             <label class="text-sm text-[var(--color-text-secondary)]">Subject</label>
             <select id="subject" class="w-full p-3 mb-4 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
@@ -876,8 +1220,7 @@
             </div>
         </div>
 
-        <!-- Pomodoro Timer Section -->
-        <div class="card w-full">
+        <div id="pomodoroSection" class="content-section card w-full">
             <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">🍅 Pomodoro Timer</h2>
             <div id="pomodoroTimer">
                 <div id="timerDisplay">25:00</div>
@@ -893,8 +1236,7 @@
             </div>
         </div>
 
-        <!-- To-Do List Section -->
-        <div class="card w-full">
+        <div id="todoListSection" class="content-section card w-full">
             <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">✅ Study To-Do List</h2>
             <div id="todoListContainer">
                 <input type="text" id="todoInput" placeholder="Add a new study task..." class="w-full p-3 mb-4 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
@@ -905,8 +1247,7 @@
             </div>
         </div>
 
-        <!-- Daily Stats & Goals Section -->
-        <div class="card w-full">
+        <div id="dailyProgressSection" class="content-section card w-full">
             <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">📊 Daily Progress</h2>
             <div class="stats text-base text-[var(--color-text-primary)] mb-4" id="todayStats"></div>
             <div id="streakDisplay" class="flex items-center justify-center gap-2 mb-4"></div>
@@ -919,8 +1260,7 @@
             </div>
         </div>
 
-        <!-- Calendar Section -->
-        <div class="card w-full">
+        <div id="calendarSection" class="content-section card w-full">
             <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">🗓️ Study Calendar</h2>
             <div id="monthNav" class="flex justify-between items-center mb-4 text-[var(--color-text-primary)]">
                 <button onclick="prevMonth()" class="p-2 rounded-full bg-[var(--color-input-bg)] border border-[var(--color-input-border)] hover:bg-[var(--color-input-border)] transition-colors">◀️</button>
@@ -933,8 +1273,7 @@
             </div>
         </div>
 
-        <!-- Data Visualizations Section -->
-        <div class="card w-full">
+        <div id="studyInsightsSection" class="content-section card w-full">
             <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">📈 Study Insights</h2>
             <div id="chartsContainer">
                 <div class="chart-wrapper">
@@ -952,8 +1291,7 @@
             </div>
         </div>
 
-        <!-- Gamification Section -->
-        <div class="card w-full" id="gamificationSection">
+        <div id="gamificationSection" class="content-section card w-full">
             <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">🏆 Beastie Achievements</h2>
             <div id="levelDisplay">Level: 1 (0 XP)</div>
             <div id="xpProgress"><div id="xpFill"></div></div>
@@ -963,8 +1301,79 @@
             </div>
         </div>
 
-        <!-- Filter & Export Logs Section -->
-        <div class="card w-full">
+        <!-- Revision Hub Section -->
+        <div id="revisionHubSection" class="content-section card w-full">
+            <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">🔄 Revision Hub</h2>
+            <p class="text-center text-sm text-[var(--color-text-secondary)] mb-4">Mark revisions as complete only on Saturdays or Sundays.</p>
+            <div id="pendingRevisionsList" class="flex flex-col gap-3">
+                <!-- Pending revisions will be rendered here -->
+            </div>
+            <h3 class="text-lg font-bold text-center mt-8 mb-4 text-[var(--color-accent-base)]">Completed Revisions</h3>
+            <div id="finishedRevisionsList" class="flex flex-col gap-3">
+                <!-- Finished revisions will be rendered here -->
+            </div>
+            <button onclick="clearFinishedRevisions()" class="clear-btn w-full mt-6">🧹 Clear Finished Revisions</button>
+        </div>
+
+        <!-- AI Recaller Section (NEW) -->
+        <div id="aiRecallerSection" class="content-section card w-full">
+            <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">⏰ AI Recaller</h2>
+            <p class="text-center text-sm text-[var(--color-text-secondary)] mb-4">Your personalized spaced repetition schedule.</p>
+            
+            <h3 class="text-lg font-bold text-center mt-4 mb-3 text-[var(--color-accent-base)]">Upcoming Recalls</h3>
+            <div id="upcomingRecallsList" class="flex flex-col gap-3">
+                <!-- Upcoming recalls will be rendered here -->
+            </div>
+
+            <h3 class="text-lg font-bold text-center mt-8 mb-3 text-[var(--color-accent-base)]">Overdue Recalls</h3>
+            <div id="overdueRecallsList" class="flex flex-col gap-3">
+                <!-- Overdue recalls will be rendered here -->
+            </div>
+
+            <h3 class="text-lg font-bold text-center mt-8 mb-3 text-[var(--color-accent-base)]">Completed Recalls</h3>
+            <div id="completedRecallsList" class="flex flex-col gap-3">
+                <!-- Completed recalls will be rendered here -->
+            </div>
+            <button onclick="clearCompletedRecalls()" class="clear-btn w-full mt-6">🧹 Clear Completed Recalls</button>
+        </div>
+
+
+        <!-- AI Study Planner Section -->
+        <div id="aiStudyPlannerSection" class="content-section card w-full">
+            <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">✨ AI Study Plan Generator</h2>
+            <label class="text-sm text-[var(--color-text-secondary)]">Subjects (comma-separated, e.g., Math, Science, History)</label>
+            <input type="text" id="plannerSubjects" placeholder="e.g., Algebra, Biology, World History" class="w-full p-3 mb-4 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
+            
+            <label class="text-sm text-[var(--color-text-secondary)]">Total Weekly Study Hours</label>
+            <input type="number" id="plannerHours" placeholder="e.g., 15" min="1" class="w-full p-3 mb-4 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
+            
+            <label class="text-sm text-[var(--color-text-secondary)]">Target Exam Date</label>
+            <input type="date" id="plannerTargetDate" class="w-full p-3 mb-4 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
+            
+            <button onclick="generateStudyPlan()" class="w-full md:w-auto">🚀 Generate Study Plan</button>
+            
+            <div id="studyPlanOutput" class="ai-output-area mt-6">
+                <!-- AI generated study plan will appear here -->
+            </div>
+            <div id="studyPlanLoading" class="ai-loading-indicator" style="display:none;">Generating plan...</div>
+        </div>
+
+        <!-- AI Assistant Section -->
+        <div id="aiAssistantSection" class="content-section card w-full">
+            <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">🧠 AI Concept Explainer</h2>
+            <label class="text-sm text-[var(--color-text-secondary)]">Concept to Explain</label>
+            <input type="text" id="conceptInput" placeholder="e.g., Photosynthesis" class="w-full p-3 mb-4 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
+            
+            <button onclick="explainConcept()" class="w-full md:w-auto">💡 Explain Concept</button>
+            
+            <div id="conceptExplanationOutput" class="ai-output-area mt-6">
+                <!-- AI generated explanation will appear here -->
+            </div>
+            <div id="conceptLoading" class="ai-loading-indicator" style="display:none;">Thinking...</div>
+        </div>
+
+
+        <div id="filterExportSection" class="content-section card w-full">
             <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">🔍 Filter & Export Logs</h2>
             <div id="filterSearchContainer">
                 <input type="text" id="logSearchInput" placeholder="Search notes..." onkeyup="filterLogs()" class="w-full p-3 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
@@ -992,6 +1401,7 @@
         let currentTheme = 'dark'; // Default theme
         let currentAccentColor = '#00cfff'; // Default accent color (Cyan)
         let currentAccentColorRGB = '0, 207, 255'; // Default RGB for Cyan
+        let pendingRevisions = []; // For the Revision Hub (weekend-only)
 
         // Pomodoro Timer variables
         let pomodoroTimerInterval;
@@ -1143,7 +1553,7 @@
             const bigint = parseInt(hex.slice(1), 16);
             const r = (bigint >> 16) & 255;
             const g = (bigint >> 8) & 255;
-            const b = bigint & 255;
+            const b = bigint & 0x0000ff;
             return `${r}, ${g}, ${b}`;
         }
 
@@ -1226,9 +1636,27 @@
 
             const d = new Date().toLocaleDateString();
             const timestamp = Date.now(); // Add a timestamp for consistent ordering
+            const newLogId = 'log_' + timestamp + '_' + Math.random().toString(36).substring(2, 9); // More robust unique ID
 
-            logs.unshift({ date: d, subj: s, time: t, session, kind, note, mood, timestamp });
+            const newLog = { id: newLogId, date: d, subj: s, time: t, session, kind, note, mood, timestamp, recallSchedule: [] };
+            logs.unshift(newLog); // Add to the beginning for chronological display
             saveToLocalStorage('beastieLogs', logs); // Save to localStorage
+
+            // Add to pendingRevisions if it's a 'New Study' or 'Practice'
+            if (kind === 'New' || kind === 'Practice') {
+                pendingRevisions.unshift({
+                    id: 'rev_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9), // Unique ID for the revision entry
+                    originalLogId: newLogId, // Link to the original study log
+                    subject: s,
+                    dateLogged: d,
+                    notes: note,
+                    status: 'pending'
+                });
+                saveToLocalStorage('pendingRevisions', pendingRevisions);
+
+                // Schedule AI Recaller dates for New Study/Practice
+                scheduleRecallDates(newLogId, new Date(timestamp), s, note);
+            }
 
             // Update XP and check for level up
             userXP += (t * XP_PER_MINUTE);
@@ -1260,7 +1688,9 @@
 
         function clearHistory() {
             logs = [];
+            pendingRevisions = []; // Clear revisions too
             localStorage.removeItem('beastieLogs'); // Clear from localStorage
+            localStorage.removeItem('pendingRevisions'); // Clear revisions from localStorage
             userXP = 0; // Reset XP
             userLevel = 1; // Reset Level
             achievements.forEach(a => a.earned = false); // Reset achievements
@@ -1302,8 +1732,9 @@
                 yesterday.setDate(lastDate.getDate() - 1);
                 if (latestLogDate.getTime() === yesterday.getTime()) {
                     lastDate.setDate(lastDate.getDate() - 1); // Adjust lastDate to yesterday to start streak
-                } else if (latestLogDate.getTime() < yesterday.getTime()) {
-                    return 0; // If the latest log is older than yesterday, streak is 0
+                } else if (latestLogDate.getTime() < lastDate.getTime()) {
+                    // This condition means the latest log is older than yesterday, so streak is 0
+                    return 0; 
                 }
             }
 
@@ -1372,7 +1803,7 @@
                 goalFill.classList.remove('complete');
             }
             // Display goal progress visually
-            const goalContainer = document.getElementById("goalContainer");
+            const goalContainer = document.querySelector(".goals"); // Changed to select the parent .goals div
             let goalStatus = document.getElementById("goalStatus");
             if (!goalStatus) {
                 goalStatus = document.createElement('p');
@@ -1500,7 +1931,9 @@
                         // Log the study session automatically
                         const d = new Date().toLocaleDateString();
                         const timestamp = Date.now();
+                        const newLogId = 'log_' + timestamp + '_' + Math.random().toString(36).substring(2, 9);
                         logs.unshift({
+                            id: newLogId,
                             date: d,
                             subj: 'Pomodoro Session',
                             time: studyDuration / 60, // Log actual study minutes
@@ -1508,7 +1941,8 @@
                             kind: 'Focused Study',
                             note: `Completed a ${studyDuration / 60}-minute Pomodoro session.`,
                             mood: 'Focused', // Default mood for auto-logged sessions
-                            timestamp: timestamp
+                            timestamp: timestamp,
+                            recallSchedule: [] // Pomodoro sessions don't need recall
                         });
                         saveToLocalStorage('beastieLogs', logs);
                         userXP += (studyDuration / 60 * XP_PER_MINUTE);
@@ -1891,6 +2325,409 @@
             });
         }
 
+        // --- Tab Management ---
+        let activeTabId = 'logStudySection'; // Default active tab is now Log Study
+
+        function showTab(tabId) {
+            // Hide all content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+                section.style.display = 'none'; // Ensure it's truly hidden
+            });
+
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show the selected content section
+            const selectedSection = document.getElementById(tabId);
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+                selectedSection.style.display = 'block'; // Make it visible
+                activeTabId = tabId; // Update active tab ID
+            }
+
+            // Activate the clicked tab button
+            const clickedButton = document.querySelector(`.tab-button[onclick*="showTab('${tabId}')"]`);
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+            
+            // Re-render charts/revisions/recalls if their tabs are activated
+            if (tabId === 'studyInsightsSection') {
+                renderCharts();
+            } else if (tabId === 'revisionHubSection') {
+                renderRevisionHub();
+            } else if (tabId === 'aiRecallerSection') { // New: Render AI Recaller
+                renderAIRecaller();
+            } else if (tabId === 'todoListSection') {
+                renderTodos();
+            } else if (tabId === 'dailyProgressSection') {
+                updateStats();
+                updateGoal();
+                updateStreak();
+            } else if (tabId === 'calendarSection') {
+                drawCalendar();
+            } else if (tabId === 'filterExportSection') {
+                filterLogs();
+            }
+            // No specific re-render needed for AI Planner/Assistant on show, as they render on button click
+        }
+
+        // --- Mobile Navigation Toggle ---
+        function toggleMobileNav() {
+            const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+            if (mobileNavOverlay.classList.contains('show')) {
+                mobileNavOverlay.classList.remove('show');
+                setTimeout(() => { mobileNavOverlay.style.display = 'none'; }, 300); // Match CSS transition
+            } else {
+                mobileNavOverlay.style.display = 'flex';
+                setTimeout(() => { mobileNavOverlay.classList.add('show'); }, 10); // Small delay for transition to apply
+            }
+        }
+
+
+        // --- Revision Hub Functions ---
+        function renderRevisionHub() {
+            const pendingList = document.getElementById('pendingRevisionsList');
+            const finishedList = document.getElementById('finishedRevisionsList');
+            pendingList.innerHTML = '';
+            finishedList.innerHTML = '';
+
+            const pending = pendingRevisions.filter(rev => rev.status === 'pending');
+            const finished = pendingRevisions.filter(rev => rev.status === 'finished');
+
+            if (pending.length === 0) {
+                pendingList.innerHTML = '<p class="text-center text-[var(--color-text-secondary)] italic">No pending revisions. Great job!</p>';
+            } else {
+                pending.forEach(rev => {
+                    const item = document.createElement('div');
+                    item.className = 'revision-item';
+                    item.innerHTML = `
+                        <p><strong>Subject:</strong> ${rev.subject}</p>
+                        <p><em>Logged On:</em> ${rev.dateLogged}</p>
+                        ${rev.notes ? `<p><em>Notes:</em> ${rev.notes}</p>` : ''}
+                        <button class="mark-button" onclick="markAsRevised('${rev.id}')">Mark as Revised</button>
+                    `;
+                    pendingList.appendChild(item);
+                });
+            }
+
+            if (finished.length === 0) {
+                finishedList.innerHTML = '<p class="text-center text-[var(--color-text-secondary)] italic">No completed revisions yet.</p>';
+            } else {
+                finished.forEach(rev => {
+                    const item = document.createElement('div');
+                    item.className = 'revision-item finished';
+                    item.innerHTML = `
+                        <p><strong>Subject:</strong> ${rev.subject}</p>
+                        <p><em>Logged On:</em> ${rev.dateLogged}</p>
+                        <p><em>Revised On:</em> ${rev.dateFinished}</p>
+                        ${rev.notes ? `<p><em>Notes:</em> ${rev.notes}</p>` : ''}
+                        <button class="mark-button" disabled>Revised</button>
+                    `;
+                    finishedList.appendChild(item);
+                });
+            }
+        }
+
+        function markAsRevised(revisionId) {
+            const today = new Date();
+            const dayOfWeek = today.getDay(); // 0 for Sunday, 6 for Saturday
+
+            if (dayOfWeek === 0 || dayOfWeek === 6) { // It's Sunday or Saturday
+                const revisionIndex = pendingRevisions.findIndex(rev => rev.id === revisionId);
+                if (revisionIndex > -1) {
+                    pendingRevisions[revisionIndex].status = 'finished';
+                    pendingRevisions[revisionIndex].dateFinished = today.toLocaleDateString();
+                    saveToLocalStorage('pendingRevisions', pendingRevisions);
+                    renderRevisionHub();
+                    showMessage('Revision marked as finished! 🎉', 'success');
+                }
+            } else {
+                showMessage('Revisions can only be marked as finished on Saturdays or Sundays. Keep studying!', 'info');
+            }
+        }
+
+        function clearFinishedRevisions() {
+            showConfirm("Are you sure you want to clear ALL completed revisions?", (confirmed) => {
+                if (confirmed) {
+                    pendingRevisions = pendingRevisions.filter(rev => rev.status === 'pending');
+                    saveToLocalStorage('pendingRevisions', pendingRevisions);
+                    renderRevisionHub();
+                    showMessage('Finished revisions cleared!', 'success');
+                }
+            });
+        }
+
+        // Function to ensure all 'New' or 'Practice' logs have a corresponding pending revision
+        function syncLogsToRevisions() {
+            logs.forEach(log => {
+                if ((log.kind === 'New' || log.kind === 'Practice') &&
+                    !pendingRevisions.some(rev => rev.originalLogId === log.id)) {
+                    // Add a new pending revision for this log if it doesn't exist
+                    pendingRevisions.unshift({
+                        id: 'rev_' + Date.now() + Math.random().toString(36).substring(2, 9), // More robust unique ID
+                        originalLogId: log.id,
+                        subject: log.subj,
+                        dateLogged: log.date,
+                        notes: log.note,
+                        status: 'pending'
+                    });
+                }
+                // Also ensure recallSchedule is initialized for old logs that might not have it
+                if (!log.recallSchedule) {
+                    log.recallSchedule = [];
+                    // For existing logs, don't auto-schedule, user can manually trigger if needed
+                    // or we could add a "Generate Recalls" button per log entry.
+                    // For now, just initialize the array.
+                }
+            });
+            saveToLocalStorage('beastieLogs', logs); // Save logs with new recallSchedule property
+            saveToLocalStorage('pendingRevisions', pendingRevisions);
+        }
+
+        // --- AI Recaller Functions (NEW) ---
+        function addDays(date, days) {
+            const result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        }
+
+        function scheduleRecallDates(logId, originalStudyDate, subject, notes) {
+            // Spaced repetition intervals: Day 3, Day 7, Day 30, Day 90, Day 180, Day 365
+            const intervals = [3, 7, 30, 90, 180, 365]; 
+            const log = logs.find(l => l.id === logId);
+
+            if (log) {
+                log.recallSchedule = intervals.map(days => {
+                    const recallDate = addDays(originalStudyDate, days).toLocaleDateString();
+                    return {
+                        recallId: logId + '_recall_' + days, // Unique ID for each recall instance
+                        date: recallDate,
+                        status: 'pending', // 'pending', 'overdue', 'completed'
+                        interval: `Day ${days}`,
+                        subject: subject,
+                        notes: notes
+                    };
+                });
+                saveToLocalStorage('beastieLogs', logs);
+            }
+        }
+
+        function renderAIRecaller() {
+            const upcomingList = document.getElementById('upcomingRecallsList');
+            const overdueList = document.getElementById('overdueRecallsList');
+            const completedList = document.getElementById('completedRecallsList');
+            
+            upcomingList.innerHTML = '';
+            overdueList.innerHTML = '';
+            completedList.innerHTML = '';
+
+            const today = new Date();
+            today.setHours(0,0,0,0); // Normalize today's date
+
+            let allRecalls = [];
+            logs.forEach(log => {
+                if (log.recallSchedule) {
+                    allRecalls = allRecalls.concat(log.recallSchedule.map(recall => ({
+                        ...recall,
+                        originalLogId: log.id, // Link back to original log
+                        originalLogDate: log.date // Original study date for context
+                    })));
+                }
+            });
+
+            // Sort recalls by date
+            allRecalls.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            const upcoming = [];
+            const overdue = [];
+            const completed = [];
+
+            allRecalls.forEach(recall => {
+                const recallDate = new Date(recall.date);
+                recallDate.setHours(0,0,0,0);
+
+                if (recall.status === 'completed') {
+                    completed.push(recall);
+                } else if (recallDate < today) {
+                    recall.status = 'overdue'; // Mark as overdue if date passed
+                    overdue.push(recall);
+                } else {
+                    upcoming.push(recall);
+                }
+            });
+            saveToLocalStorage('beastieLogs', logs); // Save logs with updated recall statuses
+
+            // Render Upcoming Recalls
+            if (upcoming.length === 0) {
+                upcomingList.innerHTML = '<p class="text-center text-[var(--color-text-secondary)] italic">No upcoming recalls scheduled.</p>';
+            } else {
+                upcoming.forEach(recall => {
+                    const item = document.createElement('div');
+                    item.className = 'recall-item';
+                    item.innerHTML = `
+                        <p><strong>Subject:</strong> ${recall.subject} (${recall.interval})</p>
+                        <p><em>Original Study:</em> ${recall.originalLogDate}</p>
+                        <p><em>Recall Date:</em> ${recall.date}</p>
+                        ${recall.notes ? `<p><em>Notes:</em> ${recall.notes}</p>` : ''}
+                        <button class="mark-button" onclick="markRecallAsCompleted('${recall.originalLogId}', '${recall.recallId}')">Mark as Recalled</button>
+                    `;
+                    upcomingList.appendChild(item);
+                });
+            }
+
+            // Render Overdue Recalls
+            if (overdue.length === 0) {
+                overdueList.innerHTML = '<p class="text-center text-[var(--color-text-secondary)] italic">No overdue recalls. You\'re on track!</p>';
+            } else {
+                overdue.forEach(recall => {
+                    const item = document.createElement('div');
+                    item.className = 'recall-item overdue';
+                    item.innerHTML = `
+                        <p><strong>Subject:</strong> ${recall.subject} (${recall.interval})</p>
+                        <p><em>Original Study:</em> ${recall.originalLogDate}</p>
+                        <p><em>Overdue Since:</em> ${recall.date}</p>
+                        ${recall.notes ? `<p><em>Notes:</em> ${recall.notes}</p>` : ''}
+                        <button class="mark-button" onclick="markRecallAsCompleted('${recall.originalLogId}', '${recall.recallId}')">Mark as Recalled</button>
+                    `;
+                    overdueList.appendChild(item);
+                });
+            }
+
+            // Render Completed Recalls
+            if (completed.length === 0) {
+                completedList.innerHTML = '<p class="text-center text-[var(--color-text-secondary)] italic">No completed recalls yet.</p>';
+            } else {
+                completed.forEach(recall => {
+                    const item = document.createElement('div');
+                    item.className = 'recall-item completed';
+                    item.innerHTML = `
+                        <p><strong>Subject:</strong> ${recall.subject} (${recall.interval})</p>
+                        <p><em>Original Study:</em> ${recall.originalLogDate}</p>
+                        <p><em>Completed On:</em> ${recall.dateCompleted}</p>
+                        ${recall.notes ? `<p><em>Notes:</em> ${recall.notes}</p>` : ''}
+                        <button class="mark-button" disabled>Recalled</button>
+                    `;
+                    completedList.appendChild(item);
+                });
+            }
+        }
+
+        function markRecallAsCompleted(originalLogId, recallId) {
+            const logIndex = logs.findIndex(l => l.id === originalLogId);
+            if (logIndex > -1) {
+                const recallIndex = logs[logIndex].recallSchedule.findIndex(r => r.recallId === recallId);
+                if (recallIndex > -1) {
+                    logs[logIndex].recallSchedule[recallIndex].status = 'completed';
+                    logs[logIndex].recallSchedule[recallIndex].dateCompleted = new Date().toLocaleDateString();
+                    saveToLocalStorage('beastieLogs', logs);
+                    renderAIRecaller();
+                    showMessage('Recall marked as completed! ✅', 'success');
+                }
+            }
+        }
+
+        function clearCompletedRecalls() {
+            showConfirm("Are you sure you want to clear ALL completed AI Recalls?", (confirmed) => {
+                if (confirmed) {
+                    logs.forEach(log => {
+                        if (log.recallSchedule) {
+                            log.recallSchedule = log.recallSchedule.filter(recall => recall.status !== 'completed');
+                        }
+                    });
+                    saveToLocalStorage('beastieLogs', logs);
+                    renderAIRecaller();
+                    showMessage('Completed recalls cleared!', 'success');
+                }
+            });
+        }
+
+
+        // --- Gemini API Functions ---
+        async function callGeminiAPI(prompt, outputElementId, loadingElementId) {
+            const outputElement = document.getElementById(outputElementId);
+            const loadingElement = document.getElementById(loadingElementId);
+
+            outputElement.textContent = ''; // Clear previous output
+            loadingElement.style.display = 'block'; // Show loading indicator
+
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = "AIzaSyBUJ0pOE1GaT750wX4pWUWUpatcKZ6Bly4"; // Canvas will provide this at runtime if empty
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                console.log("Calling Gemini API with prompt:", prompt); // Debugging
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                console.log("Gemini API raw response:", result); // Debugging
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    outputElement.textContent = text;
+                    showMessage("AI response generated!", 'success');
+                } else {
+                    // Log the error details from the API response if available
+                    const errorMessage = result.error && result.error.message ? result.error.message : "Unknown error from API.";
+                    outputElement.textContent = `Error: Could not generate response. ${errorMessage}`;
+                    console.error("Gemini API response structure unexpected or error:", result);
+                    showMessage(`AI response failed: ${errorMessage}`, 'error');
+                }
+            } catch (error) {
+                outputElement.textContent = "Error: Failed to connect to AI. Check your network or try again later.";
+                console.error("Error calling Gemini API:", error);
+                showMessage("AI response failed: Network or API error.", 'error');
+            } finally {
+                loadingElement.style.display = 'none'; // Hide loading indicator
+            }
+        }
+
+        async function generateStudyPlan() {
+            const subjects = document.getElementById('plannerSubjects').value.trim();
+            const hours = document.getElementById('plannerHours').value.trim();
+            const targetDate = document.getElementById('plannerTargetDate').value;
+
+            if (!subjects || !hours || !targetDate) {
+                showMessage("Please fill in all fields for the study plan.", 'error');
+                return;
+            }
+
+            const today = new Date().toLocaleDateString();
+            const prompt = `As an AI Study Coach, generate a detailed weekly study plan based on the following:
+            Subjects: ${subjects}
+            Total weekly study hours: ${hours}
+            Target exam date: ${targetDate}
+            Current date: ${today}
+
+            The plan should be actionable, break down hours per subject, suggest topics (if general subjects like Math/Science), and include dedicated revision slots. Provide it in a clear, easy-to-read format.`;
+
+            await callGeminiAPI(prompt, 'studyPlanOutput', 'studyPlanLoading');
+        }
+
+        async function explainConcept() {
+            const concept = document.getElementById('conceptInput').value.trim();
+
+            if (!concept) {
+                showMessage("Please enter a concept to explain.", 'error');
+                return;
+            }
+
+            const prompt = `Explain the concept of "${concept}" in a simple, concise, and easy-to-understand manner, as if explaining it to a high school student. Use analogies if helpful.`;
+
+            await callGeminiAPI(prompt, 'conceptExplanationOutput', 'conceptLoading');
+        }
+
 
         // --- Main Update Function ---
         function updateAll() {
@@ -1902,10 +2739,13 @@
             updateGamificationDisplay();
             renderTodos(); // Re-render to-do list
             filterLogs(); // Re-render filtered logs
+            renderRevisionHub(); // Render revision hub
+            renderAIRecaller(); // Render AI Recaller
         }
 
         // --- Password Lock ---
         function checkPassword() {
+            console.log("checkPassword called.");
             const inp = document.getElementById("authPass").value;
             
             if (!inp) {
@@ -1914,67 +2754,130 @@
             }
 
             if (inp === FIXED_PASSWORD) { // Check against the fixed password
+                console.log("Password correct. Unlocking UI.");
                 unlockUI();
             } else { // Incorrect password
                 showMessage("❌ Incorrect password! Try again.", 'error');
                 document.getElementById("authPass").value = ""; // Clear input
+                console.log("Incorrect password.");
             }
         }
 
         function unlockUI() {
+            console.log("unlockUI called.");
             const o = document.getElementById("authOverlay");
             const mainContent = document.getElementById('mainContent');
 
-            o.style.animation = "fadeOut .4s ease forwards"; // Start fade out animation
+            o.style.opacity = '0'; // Start fade out animation
+            o.style.transform = 'translateY(-40px)'; // Move up slightly while fading
             
             // Wait for the animation to complete for the overlay
             setTimeout(() => {
-                o.remove(); // Remove overlay from DOM
+                console.log("Auth overlay fade-out complete. Hiding authOverlay.");
+                o.style.visibility = 'hidden'; // Hide after fade
+                o.style.display = 'none'; // Fully remove from layout
+                if (o.parentNode) { // Safely remove element
+                    o.parentNode.removeChild(o); 
+                    console.log("Auth overlay removed from DOM.");
+                }
 
                 // Now, make main content visible and start its fade-in
+                mainContent.style.display = 'flex'; // Make it flex BEFORE showing
                 mainContent.style.opacity = '1';
                 mainContent.style.visibility = 'visible';
+                console.log("Main content visible. Loading initial data.");
                 
                 // Load initial data and render UI after main content is visible
                 loadInitialData(); 
-            }, 400); // Match this timeout to the fadeOut animation duration
+            }, 500); // Match this timeout to the fadeOut animation duration (0.5s)
         }
 
-        // --- Initial Load ---
-        function loadInitialData() {
-            // Load theme and accent color first
-            currentTheme = loadFromLocalStorage('beastieTheme', 'dark');
-            if (currentTheme === 'light') {
-                document.body.classList.add('light-mode');
-            }
-            const savedAccentName = loadFromLocalStorage('beastieAccentColor', 'Cyan');
-            applyAccentColor(savedAccentName); // Apply saved accent color
+        // --- Initial Load Sequence ---
+        function initialLoadSequence() {
+            console.log("initialLoadSequence called.");
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const authOverlay = document.getElementById('authOverlay');
+            const mainContent = document.getElementById('mainContent');
 
+            // Ensure all are initially hidden by default, then control visibility
+            loadingOverlay.style.display = 'flex'; // Show loading spinner
+            loadingOverlay.style.opacity = '1';
+            loadingOverlay.style.visibility = 'visible';
+            console.log("Loading overlay shown.");
+
+            authOverlay.style.display = 'none'; // Hide auth overlay initially
+            mainContent.style.display = 'none'; // Hide main content initially
+
+            // After a delay, fade out loading overlay and show password screen
+            setTimeout(() => {
+                loadingOverlay.style.opacity = '0'; // Start fade out
+                console.log("Loading overlay starting fade-out.");
+                setTimeout(() => {
+                    loadingOverlay.style.visibility = 'hidden';
+                    loadingOverlay.style.display = 'none'; // Fully hide
+                    if (loadingOverlay.parentNode) {
+                        loadingOverlay.parentNode.removeChild(loadingOverlay); // Remove from DOM
+                        console.log("Loading overlay hidden and removed.");
+                    }
+
+                    // Show password overlay
+                    authOverlay.style.display = 'flex'; // Make it flex BEFORE showing
+                    authOverlay.classList.add('show'); // Trigger CSS transition for opacity/transform
+                    console.log("Auth overlay shown.");
+                }, 500); // Match loading overlay fade-out transition duration
+            }, 2500); // Spinner display duration
+        }
+
+        // --- Data Loading and Initialization ---
+        function loadInitialData() {
+            console.log("loadInitialData called.");
             logs = loadFromLocalStorage('beastieLogs', []);
-            // Ensure logs are sorted by timestamp (if available) or date
-            logs.sort((a, b) => (b.timestamp || new Date(b.date).getTime()) - (a.timestamp || new Date(b.date).getTime()));
+            // Ensure recallSchedule is initialized for all logs, even old ones
+            logs.forEach(log => {
+                if (!log.recallSchedule) {
+                    log.recallSchedule = [];
+                }
+            });
+            saveToLocalStorage('beastieLogs', logs); // Save to ensure new structure is persisted
 
             goal = loadFromLocalStorage('beastieGoal', 0);
-            document.getElementById('goalInput').value = goal; // Set the input value
-
+            todos = loadFromLocalStorage('beastieTodos', []);
             userXP = loadFromLocalStorage('beastieXP', 0);
             userLevel = loadFromLocalStorage('beastieLevel', 1);
             
-            // Load achievements, merging with default definitions to pick up new ones
-            const loadedAchievements = loadFromLocalStorage('beastieAchievements', []);
+            // Load achievements and ensure all are present (for new ones added later)
+            const savedAchievements = loadFromLocalStorage('beastieAchievements', []);
             achievements.forEach(defaultAch => {
-                const loadedAch = loadedAchievements.find(a => a.id === defaultAch.id);
-                if (loadedAch) {
-                    defaultAch.earned = loadedAch.earned;
+                const saved = savedAchievements.find(sa => sa.id === defaultAch.id);
+                if (saved) {
+                    defaultAch.earned = saved.earned;
                 }
             });
-            saveToLocalStorage('beastieAchievements', achievements); // Save back in case new ones were added
+            saveToLocalStorage('beastieAchievements', achievements); // Save to ensure new structure is persisted
 
-            todos = loadFromLocalStorage('beastieTodos', []);
-
+            pendingRevisions = loadFromLocalStorage('pendingRevisions', []);
+            
             loadPomodoroSettings(); // Load Pomodoro settings
 
-            updateAll(); // Render all UI elements
+            // Call updateAll after all data is loaded
+            updateAll(); 
+
+            // Set initial tab to log study
+            showTab('logStudySection');
+
+            // Apply saved theme and accent color
+            const savedTheme = localStorage.getItem('beastieTheme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                currentTheme = 'light';
+            }
+            const savedAccentColorName = localStorage.getItem('beastieAccentColor');
+            if (savedAccentColorName && accentColors[savedAccentColorName]) {
+                applyAccentColor(savedAccentColorName);
+            } else {
+                drawAccentColorPicker(); // Draw with default if none saved
+            }
+            console.log("Initial data loaded and UI updated.");
         }
 
         // --- Event Listeners for new features ---
@@ -1995,16 +2898,9 @@
             });
         });
 
-
         // --- On Page Load ---
-        window.onload = () => {
-            greetUser();
-            rotateQuote();
-            updateClock(); // Ensure clock is visible immediately
-
-            const ov = document.getElementById("authOverlay");
-            ov.style.display = "flex"; // Always show the password overlay
-        };
+        window.onload = initialLoadSequence; // THIS IS THE FIX!
+        
     </script>
 </body>
 </html>
