@@ -820,6 +820,16 @@
             cursor: pointer;
             padding: 5px 10px;
             z-index: 1000; /* Ensure it's above other content */
+            position: sticky; /* Changed to sticky */
+            top: 15px; /* Stay at the top */
+            left: 15px; /* Stay at the left */
+            align-self: flex-start; /* Align to the start of the flex container */
+        }
+
+        @media (max-width: 600px) {
+            #mobileNavToggle {
+                display: block; /* Show on mobile */
+            }
         }
 
         #mobileNavOverlay {
@@ -839,6 +849,8 @@
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
+            overflow-y: auto; /* Allow scrolling within the overlay */
+            padding: 20px; /* Add padding for content inside */
         }
 
         #mobileNavOverlay.show {
@@ -862,6 +874,8 @@
             flex-direction: column;
             gap: 15px;
             text-align: center;
+            width: 100%; /* Ensure links take full width for centering */
+            padding: 20px 0; /* Add vertical padding */
         }
 
         #mobileNavOverlay .mobile-nav-links .tab-button {
@@ -869,6 +883,7 @@
             padding: 15px 20px;
             font-size: 1.1rem;
             border-radius: 28px;
+            margin: 0 auto; /* Center buttons horizontally */
         }
 
 
@@ -933,12 +948,22 @@
             min-height: 100px;
             margin-top: 20px;
             white-space: pre-wrap; /* Preserve whitespace and wrap text */
+            word-wrap: break-word; /* Break long words */
             font-size: 0.95rem;
             line-height: 1.6;
             color: var(--color-text-primary);
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
-            overflow-y: auto; /* Allow scrolling for long content */
+            overflow-y: auto; /* Allow vertical scrolling for long content */
+            overflow-x: auto; /* Allow horizontal scrolling for wide content (like tables) */
             max-height: 300px; /* Limit height for long content */
+        }
+        .ai-output-area strong {
+            font-weight: bold;
+            color: var(--color-accent-base); /* Make bold text stand out */
+        }
+        .ai-output-area em {
+            font-style: italic;
+            color: var(--color-text-secondary);
         }
         .ai-loading-indicator {
             text-align: center;
@@ -1079,7 +1104,7 @@
 
             /* Mobile: Hide full tab navigation, show mobile toggle */
             #tabNav { display: none; }
-            #mobileNavToggle { display: block; position: fixed; top: 15px; left: 15px; z-index: 1001; }
+            /* mobileNavToggle already handled by sticky position and media query */
         }
     </style>
 </head>
@@ -1142,8 +1167,9 @@
     <div id="mainContent" class="flex flex-col items-center w-full max-w-4xl px-4" style="display:none;">
         <!-- Header Section with Flexbox -->
         <div class="flex flex-col items-center mb-6">
-            <h1>🔥<strong>Beastie Tracker</strong></h1>
-            <div id="greeting"></div><strong>Version: </strong><i><b>Neo 2 Stable</b></i>
+            <h1>🌟 Legendary Beastie Tracker</h1>
+            <h4><strong>Neo 2</strong> is running...</h4>
+            <div id="greeting"></div>
             <div class="quote" id="quote">“Don't wish for it, work for it.”</div>
         </div>
         <div id="clock"></div>
@@ -1341,6 +1367,7 @@
         <!-- AI Study Planner Section -->
         <div id="aiStudyPlannerSection" class="content-section card w-full">
             <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">✨ AI Study Plan Generator</h2>
+            <h4 align="center">This AI feature will Generate a Study plans for your Exams or Tests</h4><br>
             <label class="text-sm text-[var(--color-text-secondary)]">Subjects (comma-separated, e.g., Math, Science, History)</label>
             <input type="text" id="plannerSubjects" placeholder="e.g., Algebra, Biology, World History" class="w-full p-3 mb-4 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
             
@@ -1355,12 +1382,13 @@
             <div id="studyPlanOutput" class="ai-output-area mt-6">
                 <!-- AI generated study plan will appear here -->
             </div>
-            <div id="studyPlanLoading" class="ai-loading-indicator" style="display:none;">Generating plan...</div>
+            <div id="studyPlanLoading" class="ai-loading-indicator" style="display:none;"><strong>Neo 2 </strong>is analysing to generate a plan...</div>
         </div>
 
         <!-- AI Assistant Section -->
         <div id="aiAssistantSection" class="content-section card w-full">
             <h2 class="text-xl font-bold text-center mb-4 text-[var(--color-primary)]">🧠 AI Concept Explainer</h2>
+            <h4 align="center">This AI feature will explain the concepts you wish to understand. Begin the Learning Journey.</h4><br>
             <label class="text-sm text-[var(--color-text-secondary)]">Concept to Explain</label>
             <input type="text" id="conceptInput" placeholder="e.g., Photosynthesis" class="w-full p-3 mb-4 rounded-lg bg-[var(--color-input-bg)] text-[var(--color-text-primary)] border border-[var(--color-input-border)]">
             
@@ -1369,7 +1397,7 @@
             <div id="conceptExplanationOutput" class="ai-output-area mt-6">
                 <!-- AI generated explanation will appear here -->
             </div>
-            <div id="conceptLoading" class="ai-loading-indicator" style="display:none;">Thinking...</div>
+            <div id="conceptLoading" class="ai-loading-indicator" style="display:none;"><strong>Neo 2</strong> is Thinking...</div>
         </div>
 
 
@@ -2645,20 +2673,40 @@
             });
         }
 
+        /**
+         * Converts basic Markdown (bold, italics) to HTML.
+         * @param {string} markdownText The text containing Markdown.
+         * @returns {string} The HTML string.
+         */
+        function formatMarkdownToHtml(markdownText) {
+            // Convert bold: **text** or __text__ to <strong>text</strong>
+            let htmlText = markdownText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            htmlText = htmlText.replace(/__(.*?)__/g, '<strong>$1</strong>');
+            
+            // Convert italics: *text* or _text_ to <em>text</em>
+            htmlText = htmlText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            htmlText = htmlText.replace(/_(.*?)_/g, '<em>$1</em>');
+
+            // Handle newlines for better readability in HTML
+            htmlText = htmlText.replace(/\n/g, '<br>');
+
+            return htmlText;
+        }
+
 
         // --- Gemini API Functions ---
         async function callGeminiAPI(prompt, outputElementId, loadingElementId) {
             const outputElement = document.getElementById(outputElementId);
             const loadingElement = document.getElementById(loadingElementId);
 
-            outputElement.textContent = ''; // Clear previous output
+            outputElement.innerHTML = ''; // Clear previous output, use innerHTML now
             loadingElement.style.display = 'block'; // Show loading indicator
 
             try {
                 let chatHistory = [];
                 chatHistory.push({ role: "user", parts: [{ text: prompt }] });
                 const payload = { contents: chatHistory };
-                const apiKey = "AIzaSyBUJ0pOE1GaT750wX4pWUWUpatcKZ6Bly4"; // Canvas will provide this at runtime if empty
+                const apiKey = "AIzaSyAbKCS7qMswetYeeHMXdsVqmyiS-b9hBOE"; // Canvas will provide this at runtime if empty
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 console.log("Calling Gemini API with prompt:", prompt); // Debugging
@@ -2675,17 +2723,18 @@
                     result.candidates[0].content && result.candidates[0].content.parts &&
                     result.candidates[0].content.parts.length > 0) {
                     const text = result.candidates[0].content.parts[0].text;
-                    outputElement.textContent = text;
+                    // Apply Markdown formatting before setting innerHTML
+                    outputElement.innerHTML = formatMarkdownToHtml(text);
                     showMessage("AI response generated!", 'success');
                 } else {
                     // Log the error details from the API response if available
                     const errorMessage = result.error && result.error.message ? result.error.message : "Unknown error from API.";
-                    outputElement.textContent = `Error: Could not generate response. ${errorMessage}`;
+                    outputElement.innerHTML = `Error: Could not generate response. ${errorMessage}`; // Use innerHTML
                     console.error("Gemini API response structure unexpected or error:", result);
                     showMessage(`AI response failed: ${errorMessage}`, 'error');
                 }
             } catch (error) {
-                outputElement.textContent = "Error: Failed to connect to AI. Check your network or try again later.";
+                outputElement.innerHTML = "Error: Failed to connect to AI. Check your network or try again later."; // Use innerHTML
                 console.error("Error calling Gemini API:", error);
                 showMessage("AI response failed: Network or API error.", 'error');
             } finally {
@@ -2710,7 +2759,7 @@
             Target exam date: ${targetDate}
             Current date: ${today}
 
-            The plan should be actionable, break down hours per subject, suggest topics (if general subjects like Math/Science), and include dedicated revision slots. Provide it in a clear, easy-to-read format.`;
+            The plan should be actionable, break down hours per subject, suggest topics (if general subjects like Math/Science), and include dedicated revision slots. Provide it in a clear, easy-to-read format, using Markdown for headings, bolding, and lists. Avoid using pipe characters (|||) for tables directly, instead describe the tabular data clearly or use bullet points.`;
 
             await callGeminiAPI(prompt, 'studyPlanOutput', 'studyPlanLoading');
         }
@@ -2723,7 +2772,7 @@
                 return;
             }
 
-            const prompt = `Explain the concept of "${concept}" in a simple, concise, and easy-to-understand manner, as if explaining it to a high school student. Use analogies if helpful.`;
+            const prompt = `Explain the concept of "${concept}" in a simple, concise, and easy-to-understand manner, as if explaining it to a high school student. Use analogies if helpful. Use Markdown for bolding and italics.`;
 
             await callGeminiAPI(prompt, 'conceptExplanationOutput', 'conceptLoading');
         }
